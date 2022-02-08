@@ -1,3 +1,8 @@
+"""
+Algorithm to blind sort if all elements are in
+the set {0, ..., K - 1} for some K.
+"""
+
 from BlindArray import BlindArray
 
 
@@ -6,6 +11,9 @@ def sort(A):
     K = A.K
 
     def partition(front):
+        """
+        Puts all instances of the minimum element in A[front..].
+        """
         back = N - 1
         while True:
             while front < len(A) and A.is_frozen(front):

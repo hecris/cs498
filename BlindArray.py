@@ -1,18 +1,21 @@
-import random
+"""
+Interface for an array that does not support read/write,
+only swapping and querying if an element is in its correct position.
+"""
 
+import random
 class BlindArray:
-    def __init__(self, N, K=None, all_distinct=True):
+    def __init__(self, N, K=None):
         if K is None:
             K = N
 
-        assert N != 0 and 0 < K <= N
-        assert not (all_distinct and K < N)
+        assert 0 < K <= N
 
         self.N = N
         self.K = K
 
         # unique integers
-        if all_distinct:
+        if N == K:
             self.arr = list(range(N))
             random.shuffle(self.arr)
         else:

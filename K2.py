@@ -1,3 +1,7 @@
+"""
+Algorithm to blind sort if all elements are either 0 or 1.
+"""
+
 from BlindArray import BlindArray
 
 def sort(A):

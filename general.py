@@ -1,3 +1,8 @@
+"""
+Simulation code for sorting by blindly
+swapping randomly or deterministically.
+"""
+
 import random
 import itertools
 from BlindArray import BlindArray

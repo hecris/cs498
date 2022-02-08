@@ -1,15 +1,11 @@
 import itertools
 
-def good_swaps(A, log=True):
+def good_swaps(A):
     swaps = list(itertools.combinations(range(len(A)), 2))
     good = []
     for i, j in swaps:
         if A[i] == j or A[j] == i:
             good.append((i, j))
-    if log:
-        print('A:', A)
-        print('good swaps:', good)
-        print('all swaps:', swaps)
 
     return len(good) / len(swaps)
 
@@ -18,7 +14,7 @@ mymax = 0
 mymin = 1
 for perm in itertools.permutations(list(range(N))):
     if not any(i == perm[i] for i in range(N)):
-        ratio = good_swaps(perm, False)
+        ratio = good_swaps(perm)
         mymax = max(mymax, ratio)
         mymin = min(mymin, ratio)
 

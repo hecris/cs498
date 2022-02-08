@@ -1,3 +1,8 @@
+"""
+What's the minimum/maximum number of good swaps
+in an array?
+"""
+
 import itertools
 
 def good_swaps(A):

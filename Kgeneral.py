@@ -1,6 +1,6 @@
 """
 Algorithm to blind sort if all elements are in
-the set {0, ..., K - 1} for some K.
+the set {0, ..., K - 1} for some 0 < K <= N.
 """
 
 from BlindArray import BlindArray

@@ -1,11 +1,7 @@
-"""
-What's the minimum/maximum number of good swaps
-in an array?
-"""
-
 import itertools
 from collections import Counter
-from S import T
+from S import T, count_derangements
+from math import factorial, floor, e
 
 def good_swaps(A):
     swaps = list(itertools.combinations(range(len(A)), 2))
@@ -16,13 +12,35 @@ def good_swaps(A):
 
     return len(good)
 
+def derangements(N):
+    ans = []
+    A = list(range(N))
+
+    def go(i):
+        if i == N:
+            yield A.copy()
+            # ans.append(A.copy())
+        else:
+            for j in range(i, N):
+                if A[j] != i:
+                    A[i], A[j] = A[j], A[i]
+                    yield from go(i+1)
+                    A[i], A[j] = A[j], A[i]
+                    pass
+
+    # go(0)
+    # assert len(ans) == count_derangements(N)
+    yield from go(0)
+
 def count(N):
     c = Counter()
-    for perm in itertools.permutations(list(range(N))):
-        if not any(i == perm[i] for i in range(N)):
-            swaps = good_swaps(perm)
-            c[swaps] += 1
-            swaps
+    num_derangements = 0
+    for perm in derangements(N):
+        num_good_swaps = good_swaps(perm)
+        c[num_good_swaps] += 1
+        num_derangements += 1
+
+    assert num_derangements == count_derangements(N)
     return c
 
 def print_counter(c):
@@ -31,7 +49,9 @@ def print_counter(c):
 
 
 if __name__ == '__main__':
-    N = 8
+    N = int(input('Enter N: '))
+
     c = count(N)
     for k, v in c.items():
+        print('There are {} permutations with {} good swaps'.format(v, k))
         assert T(N, k) == v

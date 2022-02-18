@@ -4,6 +4,7 @@ in an array?
 """
 
 import itertools
+from collections import Counter
 
 def good_swaps(A):
     swaps = list(itertools.combinations(range(len(A)), 2))
@@ -14,11 +15,12 @@ def good_swaps(A):
 
     return len(good)
 
-N = 5
+N = 9
 total_good_swaps = 0
 total_permutations = 0
 mymax = 0
 mymin = float('inf')
+c = Counter()
 for perm in itertools.permutations(list(range(N))):
     if not any(i == perm[i] for i in range(N)):
         swaps = good_swaps(perm)
@@ -26,13 +28,19 @@ for perm in itertools.permutations(list(range(N))):
         total_permutations += 1
         mymax = max(mymax, swaps)
         mymin = min(mymin, swaps)
+        c[swaps] += 1
 
-print('mymax:', mymax)
 print('mymin:', mymin)
+print('mymax:', mymax)
 ratio = total_good_swaps / total_permutations
 print('total_good_swaps:', total_good_swaps)
 print('total_permutations:', total_permutations)
 print('ratio:', ratio)
+
+for k,v in c.items():
+    print('{}: {}'.format(k, v))
+
+# N! / N
 
 '''
 1, 0
@@ -87,6 +95,7 @@ no, because N would be in its correct spot
 
 
 
+'''
 # generate all permutations of length N where
 # no element is in the correct place
 def generate(N):
@@ -110,6 +119,7 @@ print(generate(2))
 print(generate(3))
 hi = (generate(4))
 assert all(i+1 != A[i] for A in hi for i in range(len(A)))
+'''
 
 
 

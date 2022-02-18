@@ -1,22 +1,13 @@
-from math import comb, factorial
+from functools import lru_cache
+from math import comb, factorial, floor, e
 
 '''
 Let S(n, k, s) denote the number of ways to 
-split a graph of n vertices into s connected components
+split a graph of n vertices into s connected components,
 each of size > 1 such that there are k good swaps.
-
-Assume
-n > 0
-0 < k <= n
-0 < s < n
-s > 0
-
-base cases
-n == 1: return 0
-k == 0: return 0
-s == 1: 
 '''
 
+@lru_cache(None)
 def S(n, k, s):
     if n == 1:
         return 0
@@ -61,5 +52,24 @@ def T(n, k):
 
     return ans
 
+def count_derangements(N):
+    return floor((factorial(N) + 1) / e)
+
+# Let S be number of good swaps.
+# E(S) = sum(p_k * k for k = {1, ..., N})
+# E(S) = sum((# of permutations with k good swaps) / # permutations for k = {1, ..., N})
+def E(N):
+    my_sum = 0
+    for k in range(N//2, N+1):
+        my_sum += T(N, k) * k
+
+    return my_sum / count_derangements(N)
+
 if __name__ == '__main__':
-    pass
+    N = int(input('Enter N: '))
+    for k in range(N//2, N+1):
+        t = T(N, k)
+        print('There are {} permutations with {} good swaps'.format(t, k))
+
+    print('Expected number of good swaps: {}'.format(E(N)))
+

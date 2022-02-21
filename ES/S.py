@@ -9,6 +9,9 @@ each of size > 1 such that there are k good swaps.
 
 @lru_cache(None)
 def S(n, k, s):
+    if n == 0:
+        return 1 if k == 0 and s == 0 else 0
+
     if n == 1:
         return 0
 
@@ -18,11 +21,8 @@ def S(n, k, s):
     if not (0 < k <= n):
         return 0
 
-    if s == 1:
-        return factorial(n - 1) if k == n else 0
-
     ans = 0
-    for i in range(2, n):
+    for i in range(2, n + 1): 
         # pick i vertices
         choices = comb(n, i)
 

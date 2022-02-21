@@ -2,7 +2,7 @@ from functools import lru_cache
 from math import comb, factorial, floor, e
 
 '''
-Let S(n, k, s) denote the number of ways to 
+Let S(n, k, s) denote the number of ways to
 split a graph of n vertices into s connected components,
 each of size > 1 such that there are k good swaps.
 '''
@@ -22,14 +22,14 @@ def S(n, k, s):
         return factorial(n - 1) if k == n else 0
 
     ans = 0
-    for i in range(2, n): 
+    for i in range(2, n):
         # pick i vertices
         choices = comb(n, i)
 
         # recurse on graph without these i elements
         recurse = None
         if i == 2:
-            recurse = S(n - i, k - 1, s - 1) 
+            recurse = S(n - i, k - 1, s - 1)
         else:
             recurse = S(n - i, k - i, s - 1)
 
@@ -67,7 +67,7 @@ def E(N):
 
 if __name__ == '__main__':
     N = int(input('Enter N: '))
-    for k in range(N//2, N+1):
+    for k in range(0, N+1):
         t = T(N, k)
         print('There are {} permutations with {} good swaps'.format(t, k))
 

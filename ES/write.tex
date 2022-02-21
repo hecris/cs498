@@ -1,0 +1,88 @@
+\title{Algorithm to find number of derangements of length N with K good swaps}
+\author{
+    Christopher He
+}
+% \date{\today}
+
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+
+\begin{document}
+\maketitle
+
+% \begin{abstract}
+% This is the paper's abstract \ldots
+% \end{abstract}
+
+\section{Introduction}
+
+We consider a derangement of size $N$ to be an array $D$ that is a permutation of ${0, …, N - 1}$
+where no element is in its correct sorted position.
+That is, for all $i, 0 <= i < N, D[i] \neq i$. Note that in our definition of derangement,
+all elements are distinct.
+
+% \paragraph{Outline}
+% The remainder of this article is organized as follows.
+% Section~\ref{previous work} gives account of previous work.
+% Our new and exciting results are described in Section~\ref{results}.
+% Finally, Section~\ref{conclusions} gives the conclusions.
+
+A good swap in a derangement $D$ of size $N$ is a pair $(i, j), 0 <= i < j < N$
+such that $D[i] = j$ or $D[j] = i$.
+% In English, a swap is good if it places at least one element in its correct sorted position.
+
+Let s be the number of good swaps in a derangement D of size N.
+First observe that for every element $x$ in $D$, there is at most one good swap that places $x$ in its
+correct position, so $s <= N$. Also, $s > \lfloor N / 2 \rfloor$, this follows from the fact that a good swap,
+ in the best case, places two elements in their correct positions (i.e $D[i] = j$ AND $D[j] = i$).
+
+So we know that $ \lfloor N/2 \rfloor < s <= N$. using these bounds, we can show that the expected number of random
+swaps to sort D is between $N^2/8$ and $N^2/2$. To get a more exact running time, it could be
+helpful to find the expected number of good swaps. This is defined as
+
+\[ E[s] = \sum_{k = \lfloor N/2 \rfloor}^{N} p_k \times k \]
+
+Where $p_k$ is the probability of a derangement having $k$ good swaps. We can define this as
+
+\[ \frac{\text{number of derangements with $k$ good swaps}}{\text{total number of derangements}} \]
+
+It can be shown that the number of derangements of size N is exactly $\lfloor \frac{N! + 1}{e} \rfloor$.
+But how many derangements of size $N$ have $K$ good swaps?
+
+
+\section{Model as Graph}
+Given a derangement $D$ of size $N$ we construct a directed graph $G(V, E)$ where $V = \{0, ..., N - 1\}$
+and $(i, j) \in E$ if $D[i] = j$. First observe that there are no self-loops in this graph because in 
+a derangement there is no element in its correct position. Secondly, observe that each vertex $i$ has an outdegree
+of exactly $1$, that is, $D[i] = j$ for some $j$ and if $D[i] = j$ and $D[i] = k$ then $j = k$. A similar argument shows that each
+vertex has an indegree of $1$. With these observations, the graph must be a connected cycle graph, or if
+disconnected, decomposed into multiple cycle graphs each with 2 or more nodes.
+Let's call a graph with these properties a \textbf{derangement graph}.
+The number of good swaps in $D$ is almost the number of edges in its derangement graph, except if we have a cycle of $2$ nodes,
+that represents $1$ good swap, whereas if we have a cycle of $m$ nodes where $m > 2$ then that cycle contributes
+$m$ good swaps ($m$ nodes implies $m$ edges, each being an instance where $D[i] = j$ so one of $(i, j)$ or 
+$(j, i)$ is a good swap).
+
+We then rephrase our original problem to the following: how many ways can we make a graph with
+vertices $\{0, ..., N - 1\}$ such that it is a derangement graph with $k$ good swaps?
+
+\section{Naive Recurrence}
+Let T(N, k) be the number of derangement graphs with vertices $\{0, ..., N - 1\}$ with $k$ good swaps where
+$k <= N$.
+We define a recurrence for T(N, K). It is based on the following idea:
+
+Pick $i$ vertices from the $N$ vertices. With these $i$ vertices, we will make a cycle of length $i$.
+
+If $i = 2$, this cycle contributes $1$ good swap. So 
+
+
+
+\section{Conclusions}\label{conclusions}
+We worked hard, and achieved very little.
+
+\bibliographystyle{abbrv}
+\bibliography{main}
+
+\end{document}
+This is never printed
+

@@ -63,25 +63,59 @@ that represents $1$ good swap, whereas if we have a cycle of $m$ nodes where $m 
 $m$ good swaps ($m$ nodes implies $m$ edges, each being an instance where $D[i] = j$ so one of $(i, j)$ or 
 $(j, i)$ is a good swap).
 
-We then rephrase our original problem to the following: how many ways can we make a graph with
-vertices $\{0, ..., N - 1\}$ such that it is a derangement graph with $k$ good swaps?
+We then rephrase our original problem to the following: how many derangement graphs with
+vertices $\{0, ..., N - 1\}$ are there with $k$ good swaps?
 
-\section{Naive Recurrence}
+\section{Recurrence}
+We start with a naive recurrence:
 Let T(N, k) be the number of derangement graphs with vertices $\{0, ..., N - 1\}$ with $k$ good swaps where
 $k <= N$.
-We define a recurrence for T(N, K). It is based on the following idea:
+We define a recurrence for T(N, K) based on the following idea:
 
-Pick $i$ vertices from the $N$ vertices. With these $i$ vertices, we will make a cycle of length $i$.
+Pick $i$ vertices from the $N$ vertices. With these $i$ vertices, we will make a cycle of length $i$, so $i$ must be greater than 1.
 
-If $i = 2$, this cycle contributes $1$ good swap. So 
+If we make a cycle of length $2$, that contributes $1$ good swap.
+We would like the rest of the $n - 2$ vertices to contribute $k - 1$
+good swaps. Assume we have $T(n - 2, k - 1)$
 
+If we make a cycle of length $i$ where $i > 2$, that contributes
+$i$ good swaps. Assume we have $T(n - i, k - i)$.
 
+Let $C_i$ be the number of cycles we can make of length $i$.
+There are ${i \choose 2}$ ways to pick $i$ vertices. With these $i$ vertices,
+there are $i!$ cycles we can make (fix a starting vertex, there
+are $(i - 1)$ choices for the second vertex in the cycle,
+then $(i - 2)$, and so on). 
+
+So $C_i = (i - 1)! * {i \choose 2}$.
+
+Putting this all together, we have the following recurrence:
+\[ T(N, k) =
+C_2 \times T(N - 2, k - 1) +
+\sum_{i = 2}^{k}{C_i \times T(N-i, k-i)} \]
+
+This recurrence is naive because of the following observation:
+Take for example a graph of 8 vertices. Let's say we split this
+graph into cycles of 4, 3, 2, and 1. We counted this
+arrangement $4!$ times since there are that many ways to permute these
+cycles. Thus we define another recurrence $T^\prime(N, K, S)$, the number
+of ways to make a derangement graph of N vertices with K good swaps
+with S connected components. The naive reccurence is slightly modified:
+
+\[ T^\prime(N, k, s) =
+C_2 \times T^\prime(N - 2, k - 1, s-1) +
+\sum_{i = 2}^{k}{C_i \times T^\prime(N-i, k-i, s-1)} \]
+
+Thus our final solution is
+
+$ T(N, K) = \sum_{s = 1}^{N - 1}{\frac{T^\prime(N, K, s)}{s!}} $
 
 \section{Conclusions}\label{conclusions}
-We worked hard, and achieved very little.
+Running this algorithm shows that the expected number of good swaps
+in a derangement of size $N$ is almost exactly $N - 0.5$.
 
-\bibliographystyle{abbrv}
-\bibliography{main}
+% \bibliographystyle{abbrv}
+% \bibliography{main}
 
 \end{document}
 This is never printed

@@ -53,5 +53,6 @@ if __name__ == '__main__':
 
     c = count(N)
     for k, v in c.items():
-        print('There are {} permutations with {} good swaps'.format(v, k))
+        print('Brute force: There are {} permutations with {} good swaps'.format(v, k))
+        print('My algorithm: There are {} permutations with {} good swaps'.format(v, k))
         assert T(N, k) == v

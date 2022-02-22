@@ -22,7 +22,7 @@ def S(n, k, s):
         return 0
 
     ans = 0
-    for i in range(2, n + 1): 
+    for i in range(2, n + 1):
         # pick i vertices
         choices = comb(n, i)
 
@@ -67,7 +67,7 @@ def E(N):
 
 if __name__ == '__main__':
     N = int(input('Enter N: '))
-    for k in range(0, N+1):
+    for k in range(N//2, N+1):
         t = T(N, k)
         print('There are {} permutations with {} good swaps'.format(t, k))
 

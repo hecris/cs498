@@ -116,22 +116,22 @@ if __name__ == '__main__':
     #     print(x)
 
 
-    # worst_input =  max(
-    #     derangements(N), key=lambda A: deterministic(A.copy()))
+    worst_input =  max(
+        derangements(N), key=lambda A: deterministic(A.copy()))
 
-    # print(worst_input)
-    # print(deterministic(worst_input, log=True))
+    print(worst_input)
+    print(deterministic(worst_input, log=True))
 
     # counts = {
     #         deterministic(A.copy()): A for A in derangements(N)
     #         }
 
-    counts = defaultdict(list)
-    for A in derangements(N):
-        swaps = deterministic(A.copy())
-        counts[swaps].append(A)
+    # counts = defaultdict(list)
+    # for A in derangements(N):
+    #     swaps = deterministic(A.copy())
+    #     counts[swaps].append(A)
 
-    print_counter(counts)
+    # print_counter(counts)
     # x = random.randint(0, count_derangements(N))
     # itr = derangements(N)
     # for _ in range(x):

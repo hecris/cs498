@@ -10,14 +10,14 @@ def deterministic(n):
         while i not in frozen:
             if j not in frozen:
                 frozen.update(A.swap(i, j))
-                print('-----------------')
-                print('swap: ({}, {})'.format(i, j))
-                print(A.__edges__())
-                print('frozen: {}'.format(frozen))
+                # print('-----------------')
+                # print('swap: ({}, {})'.format(i, j))
+                # print(A.__edges__())
+                # print('frozen: {}'.format(frozen))
                 swaps += 1
             j += 1
 
-    # print(str(A))
+    print(A.as_array())
     return swaps
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ def deterministic(n):
                 swaps += 1
             j += 1
 
-    print(A.as_array())
+    print(A)
     return swaps
 
 if __name__ == '__main__':

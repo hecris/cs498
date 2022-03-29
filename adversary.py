@@ -21,23 +21,6 @@ class Adversary:
         self.graph[u].remove(v)
         self.graph[v].add(u)
 
-    def as_array(self):
-        n = len(self.elements)
-        return str([next(iter(self.graph[i])).strip('element') for i in range(n)])
-
-    def __repr__(self):
-        return '\n'.join(
-                '{}: {}'.format(k, v)
-                for k, v in self.graph.items()
-                )
-
-    def edges(self):
-        return '\n'.join(
-                '{},  {}'.format(k, x)
-                for k, v in self.graph.items()
-                for x in v
-                )
-
     def __is_in_matching__(self, element, idx):
         return self.graph[idx] == {element}
 
@@ -108,6 +91,24 @@ class Adversary:
                 self.graph[self.elements[j]].remove(j)
 
         return frozen
+
+    def as_array(self):
+        n = len(self.elements)
+        return str([next(iter(self.graph[i])).strip('element') for i in range(n)])
+
+    def __repr__(self):
+        return '\n'.join(
+                '{}: {}'.format(k, v)
+                for k, v in self.graph.items()
+                )
+
+    def edges(self):
+        return '\n'.join(
+                '{},  {}'.format(k, x)
+                for k, v in self.graph.items()
+                for x in v
+                )
+
 
 
 if __name__ == '__main__':

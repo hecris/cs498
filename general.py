@@ -15,9 +15,8 @@ def probabilistic(A):
 
         pairs = list(itertools.combinations(candidates, 2))
         i, j = random.choice(pairs)
-        if not A.is_frozen(i) and not A.is_frozen(j):
-            swaps += 1
-            A.swap(i, j)
+        swaps += 1
+        A.swap(i, j)
 
     return swaps
 

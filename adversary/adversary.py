@@ -25,7 +25,13 @@ class Adversary:
         return self.graph[idx] == {element}
 
     def __attempt_remove__(self, idx, element):
-        # try to remove
+        # if edge is not in matching, simply remove
+        if not self.__is_in_matching__(element, idx):
+            if idx in self.graph[element]:
+                self.graph[element].remove(idx)
+            return True
+
+        # try to remove, and see if there is an alternating path
         self.graph[idx].remove(element)
         found, path = self.__exist_path__(element, idx)
         if found:
@@ -34,7 +40,8 @@ class Adversary:
 
             return True
 
-        # no alternating path found, edge cannot be removed
+        # no alternating path found, edge cannot be removed.
+        # add edge back into graph
         self.graph[idx].add(element)
         return False
 
@@ -59,36 +66,19 @@ class Adversary:
         # perform swap
         self.elements[i], self.elements[j] = self.elements[j], self.elements[i]
 
-        # initialize return array
+        # initialize return value
         frozen = []
-        # can we say elements[i] is not in i
 
-        # is (i, elements[i]) in matching?
-        if self.__is_in_matching__(self.elements[i], i):
-            # attempt to remove (i, elements[i])
-            # if can remove, remove it and find alternating path
-            removed = self.__attempt_remove__(i, self.elements[i])
+        # can we say elements[i] cannot be in position i
+        removed = self.__attempt_remove__(i, self.elements[i])
+        if not removed:
             # if can't remove, add it to frozen
-            if not removed:
-                frozen.append(i)
-        else:
-            # if no, simply remove (elements[i], i)
-            if i in self.graph[self.elements[i]]:
-                self.graph[self.elements[i]].remove(i)
+            frozen.append(i)
 
-        # can we say elements[j] is not in j
-        # is (j, elements[j]) in matching?
-        if self.__is_in_matching__(self.elements[j], j):
-            # attempt to remove (j, elements[j])
-            # if can remove, remove it and find alternating path
-            removed = self.__attempt_remove__(j, self.elements[j])
-            # if can't remove, add it to frozen
-            if not removed:
-                frozen.append(j)
-        else:
-            # if no, simply remove (elements[i], i)
-            if j in self.graph[self.elements[j]]:
-                self.graph[self.elements[j]].remove(j)
+        # repeat for j
+        removed = self.__attempt_remove__(j, self.elements[j])
+        if not removed:
+            frozen.append(j)
 
         return frozen
 

@@ -47,20 +47,24 @@ class Adversary:
 
     def __exist_path__(self, u, v):
         seen = set()
+        path = []
+
         def dfs(node):
             if node == v:
-                return True, []
+                return True
 
             if node not in seen:
                 seen.add(node)
                 for adj in self.graph[node]:
-                    found, path = dfs(adj)
+                    path.append((node, adj))
+                    found = dfs(adj)
                     if found:
-                        return True, [(node, adj)] + path
+                        return True
+                    path.pop()
 
-            return False, []
+            return False
 
-        return dfs(u)
+        return dfs(u), path
 
     def swap(self, i, j):
         # perform swap

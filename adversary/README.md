@@ -12,6 +12,7 @@ A = Adversary(n)
 ```
 
 ### swap
+```
 Takes two indices and performs a swap.
 
 Params:
@@ -22,14 +23,14 @@ Returns:
   A list of at most 2 integers containing the indices
   that are frozen following the swap.
 
-```
 froze = A.swap(0, 1) # possible outputs: [], [0], [1], [0, 1]
 ```
 
 ### original\_array
-Returns an input that is consistent with the swaps so far.
-
 ```
+Returns:
+  An input that is consistent with the swaps so far.
+
 print(A.original_array()) # example output: [5, 6, 7, 8, 9, 4, 3, 2, 1, 0]
 ```
 

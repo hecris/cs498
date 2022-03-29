@@ -94,7 +94,13 @@ class Adversary:
 
     def as_array(self):
         n = len(self.elements)
-        return str([next(iter(self.graph[i])).strip('element') for i in range(n)])
+        arr = [None] * n
+        for i in range(n):
+            element = next(iter(self.graph[i]))
+            element_number = int(element.strip('element'))
+            arr[element_number] = i
+
+        return arr
 
     def __repr__(self):
         return '\n'.join(

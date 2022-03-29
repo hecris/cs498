@@ -15,28 +15,28 @@ class Adversary:
                     self.graph[element].add(j)
 
                 if (i + 1) % n == j:
-                    self.__reverse_edge__(element, j)
+                    self._reverse_edge(element, j)
 
-    def __reverse_edge__(self, u, v):
+    def _reverse_edge(self, u, v):
         self.graph[u].remove(v)
         self.graph[v].add(u)
 
-    def __is_in_matching__(self, element, idx):
+    def _is_in_matching(self, element, idx):
         return self.graph[idx] == {element}
 
-    def __attempt_remove__(self, idx, element):
+    def _attempt_remove(self, idx, element):
         # if edge is not in matching, simply remove
-        if not self.__is_in_matching__(element, idx):
+        if not self._is_in_matching(element, idx):
             if idx in self.graph[element]:
                 self.graph[element].remove(idx)
             return True
 
         # try to remove, and see if there is an alternating path
         self.graph[idx].remove(element)
-        found, path = self.__exist_path__(element, idx)
+        found, path = self._exist_path(element, idx)
         if found:
             for u, v in path:
-                self.__reverse_edge__(u, v)
+                self._reverse_edge(u, v)
 
             return True
 
@@ -45,7 +45,7 @@ class Adversary:
         self.graph[idx].add(element)
         return False
 
-    def __exist_path__(self, u, v):
+    def _exist_path(self, u, v):
         seen = set()
         path = []
 
@@ -74,13 +74,13 @@ class Adversary:
         frozen = []
 
         # can we say elements[i] cannot be in position i
-        removed = self.__attempt_remove__(i, self.elements[i])
+        removed = self._attempt_remove(i, self.elements[i])
         if not removed:
             # if can't remove, add it to frozen
             frozen.append(i)
 
         # repeat for j
-        removed = self.__attempt_remove__(j, self.elements[j])
+        removed = self._attempt_remove(j, self.elements[j])
         if not removed:
             frozen.append(j)
 

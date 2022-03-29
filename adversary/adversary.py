@@ -24,27 +24,6 @@ class Adversary:
     def _is_in_matching(self, element, idx):
         return self.graph[idx] == {element}
 
-    def _attempt_remove(self, idx, element):
-        # if edge is not in matching, simply remove
-        if not self._is_in_matching(element, idx):
-            if idx in self.graph[element]:
-                self.graph[element].remove(idx)
-            return True
-
-        # try to remove, and see if there is an alternating path
-        self.graph[idx].remove(element)
-        found, path = self._exist_path(element, idx)
-        if found:
-            for u, v in path:
-                self._reverse_edge(u, v)
-
-            return True
-
-        # no alternating path found, edge cannot be removed.
-        # add edge back into graph
-        self.graph[idx].add(element)
-        return False
-
     def _exist_path(self, u, v):
         seen = set()
         path = []
@@ -65,6 +44,27 @@ class Adversary:
             return False
 
         return dfs(u), path
+
+    def _attempt_remove(self, idx, element):
+        # if edge is not in matching, simply remove
+        if not self._is_in_matching(element, idx):
+            if idx in self.graph[element]:
+                self.graph[element].remove(idx)
+            return True
+
+        # try to remove, and see if there is an alternating path
+        self.graph[idx].remove(element)
+        found, path = self._exist_path(element, idx)
+        if found:
+            for u, v in path:
+                self._reverse_edge(u, v)
+
+            return True
+
+        # no alternating path found, edge cannot be removed.
+        # add edge back into graph
+        self.graph[idx].add(element)
+        return False
 
     def swap(self, i, j):
         # perform swap

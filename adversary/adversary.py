@@ -92,7 +92,7 @@ class Adversary:
 
         return frozen
 
-    def as_array(self):
+    def original_array(self):
         n = len(self.elements)
         arr = [None] * n
         for i in range(n):

@@ -31,7 +31,11 @@ def reduce(derangement):
     ranks = {x: i for i, x in enumerate(s)}
     return [ranks[x] for x in ans]
 
-def exp(derangements, runs=100):
+def print_counter(c):
+    for k in sorted(c, key=lambda k: c[k]):
+        print(k, c[k])
+
+def experiment(derangements, runs=100):
 
     count = Counter()
 
@@ -53,11 +57,7 @@ def exp(derangements, runs=100):
         r = tuple(reduce(d))
         count[r] += 1
 
-    for k, v in count.items():
-        print(k, v)
-
     return count
-
 
 if __name__ == '__main__':
     # N = int(input("Enter N: "))
@@ -65,4 +65,16 @@ if __name__ == '__main__':
 
     ds = derangements(N)
 
-    exp(ds, 100000)
+    trials = 1000
+    master_c = Counter()
+    for _ in range(trials):
+        c = experiment(ds, 1000)
+        for k in c:
+            master_c[k] += c[k]
+
+    for k in master_c:
+        master_c[k] /= trials
+
+    print_counter(master_c)
+
+

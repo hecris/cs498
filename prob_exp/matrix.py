@@ -11,7 +11,6 @@ def reduce(derangement):
     ranks = {x: i for i, x in enumerate(s)}
     return tuple(ranks[x] for x in ans)
 
-
 def print_matrix(mat):
     for row in mat:
         print(row)
@@ -33,6 +32,10 @@ def matrix(n):
     derange_n1 = list(derangements(n - 1))
     derange_n2 = list(derangements(n - 2))
 
+    full_derange = list(derange_n)
+    full_derange.extend(derange_n1)
+    full_derange.extend(derange_n2)
+
     map_n = inv_map(derange_n)
     map_n1 = inv_map(derange_n1, dn)
     map_n2 = inv_map(derange_n2, dn + dn1)
@@ -40,9 +43,6 @@ def matrix(n):
     full_map = map_n
     full_map.update(map_n1)
     full_map.update(map_n2)
-
-    for k in sorted(full_map, key=lambda k: full_map[k]):
-        print('{}: {}'.format(k, full_map[k]))
 
     mat = [[0 for _ in range(m)] for _ in range(m)]
 
@@ -53,49 +53,90 @@ def matrix(n):
             reduced = reduce(d)
             search = full_map[reduced]
 
+            # if len(reduced) < n:
             mat[idx][search] += 1
-            # mat[idx][search] += 1/nchoose2(n)
-            d[i], d[j] = d[j], d[i]
 
+            d[i], d[j] = d[j], d[i]
 
 
     for i in range(dn1 + dn2):
         for j in range(dn):
+            # mat[~i][j] += 1
             mat[~i][j] += 1
-            # mat[~i][j] += 1/dn
 
-    # mat = np.array(mat)
-    # print(mat)
+    for ro in mat:
+        s = sum(ro)
+        for i in range(len(ro)):
+            ro[i] /= s
+
+    # for ro in mat:
+    #     print(ro)
+
+
     # print(np.sum(mat, axis=0))
 
-
-    for i in range(m):
-        for j in range(m):
-            if i < dn:
-                mat[i][j] = str(mat[i][j]) + '/' + str(nchoose2(n))
-            else:
-                mat[i][j] = str(mat[i][j]) + '/' + str(dn)
+    # for i in range(m):
+    #     for j in range(m):
+    #         if i < dn:
+    #             mat[i][j] = str(mat[i][j]) + '/' + str(nchoose2(n))
+    #         else:
+    #             mat[i][j] = str(mat[i][j]) + '/' + str(dn)
 
     # print_matrix(mat)
 
-    # for i in range(m - 1):
-    #     mat[i][i] -= 1
+    # change last column to 1
+    for ro in mat:
+        ro[-1] = 1
+
+    # multiply by modified identity
+    for i in range(m - 1):
+        mat[i][i] -= 1
+
+    mat = np.array(mat)
+    inv_mat = np.linalg.inv(mat)
 
     # print(mat)
-    # inv_mat = np.linalg.inv(mat)
     # print(inv_mat)
 
-    # vector = [0 for _ in range(m)]
-    # vector[-1] = 1
+    vector = [0 for _ in range(m)]
+    vector[-1] = 1
 
-    # vector = np.array(vector)
+    vector = np.array(vector)
 
-    # print(np.dot(vector, inv_mat))
-    # print(map_n)
-    # print(map_n1)
-    # print(map_n2)
+    probs = np.dot(vector, inv_mat)
 
-    # print_matrix(mat)
+    # print(probs)
+
+    sorted_probs = sorted(((x, i) for i, x in enumerate(probs)), reverse=True)
+
+    for x, i in sorted_probs:
+        d = full_derange[i]
+        if len(d) < n:
+            print('{}: {}'.format(d, x))
+
+    target_probs = [t for t in sorted_probs if len(full_derange[t[1]]) == n - 1]
+    target_sum = sum(t[0] for t in target_probs)
+
+    scaled_target_probs = [
+            (prob / target_sum, idx) for prob, idx in target_probs
+            ]
+    # print(target_probs)
+    # print(scaled_target_probs)
+    # print('scaled')
+
+    min_prob = min(t[0] for t in scaled_target_probs)
+    max_prob = max(t[0] for t in scaled_target_probs)
+    # print(set(t[0] for t in scaled_target_probs))
+
+
+    # for x, i in scaled_target_probs:
+    #     d = full_derange[i]
+    #     if len(d) < n:
+    #         print('{}: {}'.format(d, x))
+
+    print(min_prob / max_prob)
+    return probs
+
     # print_matrix(mat_exp(mat, 1000))
 
 
@@ -109,4 +150,7 @@ def mat_exp(mat, exp):
     return ans
 
 if __name__ == '__main__':
-    print(matrix(4))
+    # print(matrix(5))
+    N = 7
+    matrix(N)
+    # print(matrix(N))

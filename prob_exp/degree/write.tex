@@ -1,0 +1,55 @@
+\title{Number of 0 swaps in derangement}
+\author{
+    Christopher He
+}
+% \date{\today}
+
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\begin{document}
+\maketitle
+
+% \begin{abstract}
+% This is the paper's abstract \ldots
+% \end{abstract}
+
+\section{}
+
+Let $D$ be a derangement of length $n$ with cycle decomposition $c_1, c_2, ..., c_k$.
+Let $l_2$ be the number of cycles with length $2$.
+We know the number of $0$-swaps in the derangement (or the degree) is
+
+\[
+    \sum_{i}{({c_i \choose 2} - c_i)} + \sum_{i, j}{{c_i}{c_j}} + l_2 
+\]
+\[
+    = \sum_{i}{c_i \choose 2} + \sum_{i, j}{{c_i}{c_j}} - n + l_2 \quad \text{(by linearity of expectation)}
+\]
+Note that we add $l_2$ because if $c_i$ is length 2 then 
+$ {c_i \choose 2} - c_i = -1 $ so we add $l_2$ to "ignore" the cycles of length 2.
+
+I argue that the degree is ${n \choose 2} - n + l_2$. That is,
+
+\[
+    \sum_{i}{c_i \choose 2} + \sum_{i, j}{{c_i}{c_j}} - n + l_2 = {n \choose 2} - n  + l_2
+\]
+or equivalently,
+\[
+    \sum_{i}{c_i \choose 2} + \sum_{i, j}{{c_i}{c_j}} = {n \choose 2}
+\]
+
+\begin{proof}
+        \begin{align}
+            & \sum_{i}{c_i \choose 2} + \sum_{i, j}{{c_i}{c_j}}  \\\nonumber
+            &=  \sum_{i}{c_i \choose 2} + \frac{(\sum_{i}{c_i})^2 - \sum_{i}{{c_i}^2}}{2} \\\nonumber
+            &=  \frac{\sum_{i}{c_i(c_i -1)} + (\sum_{i}{c_i})^2 - \sum_{i}{{c_i}^2}}{2} \\\nonumber
+            &=  \frac{n^2 + \sum_{i}{c_i(c_i - 1)} - \sum_{i}{{c_i}^2}}{2} \\\nonumber
+            &=  \frac{n^2 - \sum_{i}{c_i}}{2} \\\nonumber
+            &=  \frac{n^2 - n}{2} \\\nonumber
+            &=  {n \choose 2}
+        \end{align}
+\end{proof}
+
+\end{document}

@@ -2,6 +2,7 @@ import pprint
 import numpy as np
 import itertools
 from derangements import derangements, count_derangements
+import collections
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -114,18 +115,61 @@ def matrix(n):
         if len(d) < n:
             print('{}: {}'.format(d, x))
 
-    target_probs = [t for t in sorted_probs if len(full_derange[t[1]]) == n - 1]
-    target_sum = sum(t[0] for t in target_probs)
+    classes = {}
+    for x, i in sorted_probs:
+        d = full_derange[i]
+        if len(d) != n:
+            continue
+        classes.setdefault(x, [])
+        classes[x].append(d)
 
-    scaled_target_probs = [
-            (prob / target_sum, idx) for prob, idx in target_probs
-            ]
+    def cycle_decomp(A):
+        ans = []
+        visited = set()
+        def dfs(i):
+            if i in visited:
+                return 0
+
+            visited.add(i)
+
+            return 1 + dfs(A[i])
+
+        for i in range(len(A)):
+            if i not in visited:
+                ans.append(dfs(i))
+
+        return tuple(sorted(ans))
+
+    for k in classes:
+        classes[k] = set(map(cycle_decomp, classes[k]))
+
+    for k in classes:
+        print(k, classes[k])
+
+    print('----------')
+
+
+    probs = collections.defaultdict(set)
+    for k in classes:
+        t = tuple(classes[k])
+        rounded = float('%s' % float('%.5g' % k))
+        probs[t].add(rounded)
+
+    for k in probs:
+        print(k, probs[k])
+
+    # target_probs = [t for t in sorted_probs if len(full_derange[t[1]]) == n - 1]
+    # target_sum = sum(t[0] for t in target_probs)
+
+    # scaled_target_probs = [
+    #         (prob / target_sum, idx) for prob, idx in target_probs
+    #         ]
     # print(target_probs)
     # print(scaled_target_probs)
     # print('scaled')
 
-    min_prob = min(t[0] for t in scaled_target_probs)
-    max_prob = max(t[0] for t in scaled_target_probs)
+    # min_prob = min(t[0] for t in scaled_target_probs)
+    # max_prob = max(t[0] for t in scaled_target_probs)
     # print(set(t[0] for t in scaled_target_probs))
 
 
@@ -134,7 +178,7 @@ def matrix(n):
     #     if len(d) < n:
     #         print('{}: {}'.format(d, x))
 
-    print(min_prob / max_prob)
+    # print(min_prob / max_prob)
     return probs
 
     # print_matrix(mat_exp(mat, 1000))
@@ -151,6 +195,6 @@ def mat_exp(mat, exp):
 
 if __name__ == '__main__':
     # print(matrix(5))
-    N = 7
+    N = 8
     matrix(N)
     # print(matrix(N))

@@ -4,10 +4,11 @@ import itertools
 import math
 import collections
 
-N = 8
+N = 5
 print(count_derangements(N))
 
-graph = collections.defaultdict(set)
+# graph = collections.defaultdict(set)
+graph = collections.defaultdict(list)
 
 c = collections.Counter()
 for d in derangements(N):
@@ -18,6 +19,7 @@ for d in derangements(N):
             reduced = reduce(d)
             if len(reduced) == N:
                 c[tuple(reduced)] += 1
+                # graph[cpy].append(reduced)
                 graph[cpy].add(tuple(reduced))
             d[i], d[j] = d[j], d[i]
 
@@ -38,13 +40,6 @@ def cycle_decomp(A):
 
     return sorted(ans)
 
-def nchoose2(n):
-    return (n * (n - 1)) // 2
-
-def degree(C):
-    n = sum(C)
-    return nchoose2(n) - n + sum(x == 2 for x in C)
-
 foo = collections.defaultdict(set)
 
 for k in c:
@@ -54,28 +49,5 @@ for k in c:
     # print(k, c[k])
 
 
-# for k in graph:
-#     print(k, graph[k])
-
-probs = collections.defaultdict(set)
-s = 0
-
-for node, neighbors in graph.items():
-    num_d = count_derangements(N)
-    prob = 0
-    for neighbor in neighbors:
-        d = degree(cycle_decomp(neighbor))
-        prob += 1 / d
-
-    prob *= 1/num_d
-    s += prob
-
-    prob_s = float('%s' % float('%.5g' % prob))
-
-    tc = tuple(cycle_decomp(node))
-    probs[tc].add(prob_s)
-
-for k in probs:
-    print(k, probs[k])
-
-print(s)
+for k in graph:
+    print(k, graph[k])

@@ -21,7 +21,7 @@ def cycle_decomp(A):
 
     return sorted(ans)
 
-N = 6
+N = 7
 print(count_derangements(N))
 
 
@@ -35,7 +35,7 @@ for d in derangements(N):
         for j in range(i + 1, N):
             d[i], d[j] = d[j], d[i]
             reduced = reduce(d)
-            if len(reduced) == N - 2:
+            if len(reduced) == N - 1:
                 tmp_c[tuple(reduced)] += 1
             d[i], d[j] = d[j], d[i]
 
@@ -45,15 +45,14 @@ for d in derangements(N):
 
     de[tuple(cycle_decomp(d))] += 1
 
-for k in de:
-    print(k, de[k])
-
-
+# for k in de:
+#     print(k, de[k])
 
 s = set()
 for k in c:
     print(k, cycle_decomp(k), c[k])
     # print(k, c[k])
     # s.add((tuple(cycle_decomp(k)), c[k]))
+    s.add((sum(x == 2 for x in tuple(cycle_decomp(k))), int(c[k])))
 
 print(s)

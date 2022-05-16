@@ -86,5 +86,5 @@ def normalize(l):
     return [x/s for x in l]
 
 if __name__ == '__main__':
-    N = 8
+    N = 5
     matrix(N)

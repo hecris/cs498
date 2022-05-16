@@ -3,6 +3,17 @@ import random
 import threading
 from math import factorial, ceil, e, floor
 from collections import Counter
+import numpy
+
+def is_derangement(a):
+    return not any(a[i] == i for i in range(len(a)))
+
+def random_derangement(n):
+    a = list(range(n))
+    while not is_derangement(a):
+        a = numpy.random.permutation(a)
+    return a
+
 
 def reduce(derangement):
     ans = [x for i, x in enumerate(derangement) if x != i]
@@ -14,17 +25,19 @@ def print_counter(c):
     for k in sorted(c, key=lambda k: c[k]):
         print(k, c[k])
 
-def experiment(derangements, runs=100):
+def experiment(n, runs=100):
 
     count = Counter()
 
     for _ in range(runs):
         # pick a random derangement
-        d = random.choice(derangements).copy()
-        n = len(d)
+        d = random_derangement(n)
 
         pairs = itertools.combinations(list(range(n)), 2)
         swaps1 = [(i, j) for i, j in pairs if (d[i] == j) ^ (d[j] == i)]
+
+        if not swaps1:
+            continue
 
         i, j = random.choice(swaps1)
         d[i], d[j] = d[j], d[i]
@@ -37,8 +50,7 @@ def experiment(derangements, runs=100):
 
 if __name__ == '__main__':
     # N = int(input("Enter N: "))
-    N = 5
+    n = 9
 
-    ds = derangements(N)
-
-    print_counter(experiment(ds, 1000))
+    c = experiment(n, 1000000)
+    print(set(c.values()))

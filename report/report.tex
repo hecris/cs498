@@ -1,6 +1,9 @@
 \documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
 
-\title{foo}
+\title{Blind Sort}
 \author{Christopher He}
 \date{\today}
 
@@ -8,18 +11,175 @@
 \maketitle
 \section{Introduction}
 
+We are given an array of integers to sort but we are not allowed to see the contents of the array.
+The only operation we have is to swap any two elements. This swap operation will return if we
+placed any of those two elements in its correct sorted position. Once an element is in its correct
+sorted position, it will "freeze" and will no longer move. Originally, all elements are out of place.
+We will explore a probabilistic algorithm
+that sorts the array by randomly swapping elements and prove it is expected to sort in $\Theta(N^2)$ swaps.
+We will also explore a deterministic algorithm to sort the array that also runs in $\Theta(N^2)$
+time. Lastly, we will provide the model of an adversary that would force any algorithm to make
+$\Omega(N^2)$ swaps to sort the array, thus establishing a lower bound.
+
+In studying this problem, we will see that we are really working with derangements. A derangement is
+a permutation of elements such that no element is in its correct position. For our problem, assume
+a derangement of size N is an array A of integers \{1, 2, ... N\} such that $A[i] \neq i$ for all $i = 1, ..., N$.
+
+We also introduce the concept of a good swap. A good swap is a swap that places at least one element in its correct
+position. That is, a swap $(i, j)$ is good if $A[i] = j$ or $A[j] = i$. Call a good swap that freezes exactly one element
+a $1$-swap and a good swap that freezes two elements a $2$-swap.
+
+We familiarize the reader to the structures we are working with by considering a counting problem:
+how many derangements of size $N$ are there with $K$ good swaps?
+
 \subsection{Number of derangements with k good swaps}
+Given a permutation, we can find the cycle decomposition of it. For example, given $A = [3,2,1,6,4,7,5]$
+the cycle decomposition is $[3,1],[2],[6,7,5,4]]$. We first make some observations about the cycle
+decomposition of a derangement. First, there would be no cycles of length 1, as this would represent
+an element in its original position. Also, a cycle of length $2$ would represent a $2$-swap. Lastly, a cycle of length $l$ where
+$l > 2$ would represent $l$ $1$-swaps. Given these observations, let $c_2$ be the number of cycles of length $2$ ($2$-cycle)
+in a derangement,
+then the number of good swaps is $N - c_2$.
+
+If we find the expected number of good swaps, this could also give us insight into the expected number of $2$-cycles.
+Note we could've found the expected number of $2$-cycles directly, but we saw the relation after the fact.
+
+Let s be the number of good swaps in a derangement D of size N. We are trying to find
+\[ E[s] = \sum_{k = \lfloor N/2 \rfloor}^{N} p_k \times k \]
+
+Where $p_k$ is the probability of a derangement having $k$ good swaps. We can define this as
+
+\[ \frac{\text{number of derangements of size $N$ with $k$ good swaps}}{\text{total number of derangements of size $N$}} \]
+
+It can be shown that the number of derangements of size N is exactly $\lfloor \frac{N! + 1}{e} \rfloor$.
+But how many derangements of size $N$ have $k$ good swaps? We propose a recurrence to answer this question.
+
+We start with a naive recurrence:
+Let T(N, k) be the number of derangements of size $N$ with $k$ good swaps where
+$k <= N$.
+We define a recurrence for T(N, k) based on the following idea:
+
+Pick $i$ elements from the $N$ elements, where $i > 1$. With these $i$ elements, we will make a cycle of length $i$.
+
+If we make a cycle of length $2$, that contributes $1$ good swap.
+We would like the rest of the $N - 2$ vertices to contribute $k - 1$
+good swaps. Assume we have $T(N - 2, k - 1)$
+
+If we make a cycle of length $i$ where $i > 2$, that contributes
+$i$ good swaps. Assume we have $T(N - i, k - i)$.
+
+Let $C_i$ be the number of cycles we can make of length $i$.
+There are ${N \choose i}$ ways to pick $i$ vertices. With these $i$ vertices,
+there are $(i-1)!$ cycles we can make (fix a starting element, there
+are $(i - 1)$ choices for the second vertex in the cycle,
+then $(i - 2)$, and so on). 
+
+So $C_i = {N \choose i} \times (i - 1)!$.
+
+Putting this all together, we have the following recurrence:
+\[ T(N, k) =
+C_2 \times T(N - 2, k - 1) +
+\sum_{i = 2}^{k}{C_i \times T(N-i, k-i)} \]
+
+This recurrence is naive because of the following observation:
+Take for example a derangement of 11 elements. Let's say we split this
+derangements into cycles of lengths 4, 3, 2, and 2. We counted this
+arrangement $4!$ times since there are that many ways to permute these
+cycles. Thus we define another recurrence $T^\prime(N, k, s)$, the number
+of ways to make a derangement of N vertices with k good swaps
+with s cycles. The naive reccurence is slightly modified:
+
+\[ T^\prime(N, k, s) =
+C_2 \times T^\prime(N - 2, k - 1, s-1) +
+\sum_{i = 2}^{k}{C_i \times T^\prime(N-i, k-i, s-1)} \]
+Thus our final solution is
+\[ T(N, K) = \sum_{s = 1}^{N}{\frac{T^\prime(N, K, s)}{s!}} \]
+
+Running this algorithm shows that $E[S] = N - \frac{1}{2}$, which reveals that $E[c_2] = \frac{1}{2}$.
+
 \section{Deterministic Algorithm}
+We propose a simple deterministic algorithm: starting at index $i = 0$, we repeatedly swap the element
+at index $i$ with all indices $j > i$ in a linear fashion, until we freeze index $i$ in which case we go onto the 
+next iteration of $i$. It is easy to see that this runs in $O(N^2)$ time. In fact, for any $N$ we can construct an input
+that takes $\Theta(N^2)$ swaps. Let $N = 8$, for example, and consider the input $[5, 6, 7, 8, 4, 3, 2, 1]$.
+We can characterize this as putting the half of biggest elements in the beginning of the array, and the half of smallest elements at
+the end of the array in reverse order. In essence, we are trying to maximize the number of swaps to place the smallest
+elements where they belong.
+The first iteration will take $N - 1 = 7$ swaps until $1$ is placed in its correct position. Observe that all elements
+between $5$ and $1$ are circularly shifted right by $1$ in the process. So we have
+
+$[5, 6, 7, 8, 4, 3, 2, 1] \rightarrow 7$ swaps
+
+$[1, 5, 6, 7, 8, 4, 3, 2] \rightarrow 6$ swaps
+
+$[1, 2, 5, 6, 7, 8, 4, 3] \rightarrow 5$ swaps
+
+$[1, 2, 3, 5, 6, 7, 8, 4] \rightarrow 4$ swaps
+
+$[1, 2, 3, 4, 5, 6, 7, 8]$
+
+And the array is sorted. In general, each iteration $i$ performs $N - i$ swaps.
+For an even $N$, the number of iterations is $N / 2$. So, the total number of swaps is
+$N + (N - 1) + ... + \frac{N}{2}$. We can describe this as a difference of two sums and solve:
+
+\begin{align}
+    & \sum_{i = 1}^{N}{i} - \sum_{i = 1}^{\frac{N}{2} - 1}{i}  \\\nonumber
+    &= \frac{N(N-1)}{2} - \frac{(\frac{N}{2})(\frac{N}{2} - 1)}{2} \\\nonumber
+    &= \frac{N(N-1)}{2} - \frac{(2N)(\frac{N}{2} - 1)}{8} \\\nonumber
+    &= \frac{N^2 - N}{2} - \frac{N^2 - 2N}{8} \\\nonumber
+    &= \frac{4N^2 - 4N}{8} - \frac{N^2 - 2N}{8} \\\nonumber
+    &= \frac{3N^2 - 2N}{8} = \frac{N(3N - 2)}{8} \\\nonumber
+\end{align}
+
+This attempt at a worst case input will be seen again when we describe the adversary for any algorithm.
+It turns out that when the deterministic algorithm "plays" the adversary, the adversary will force
+the algorithm to take this exact amount of steps (and claims this was the input all along).
+
+It is interesting to note that the worst case does not always follow this structure. For $N = 10$
+there is another derangement that make the deterministic algorithm take $1$ more swap than for
+the derangement we constructed, namely $[6, 7, 8, 9, 3, 4, 5, 2, 1, 0]$.
+We spent some time trying to find a way to generalize this structure. One can revisit this by looking
+at the cycle decomposition of this worst case derangement.
+
+Before, we observed that each iteration of the algorithm would circularly shift a subarray of elements.
+It is because of this fact that some elements can be unintentionally frozen. This led to some roadblocks
+in finding a nice recurrence for the running time of the determinstic algorithm. Although, because the
+change to the array can be characterized nicely (circular shift to some elements), we did spend some time
+trying to find how many derangements are there such that not only is every element not in its correct place
+but also not in the index before its correct one.
+
+Although we were not able to find a recurrence for the running time, through simulations we found that
+the deterministic algorithm took around $N^2/6$ swaps.
+
+
 \subsection{Case where array has k distinct values}
+mention the o(nk) algorithm
 \section{Probabilistic Algorithm}
+state what the random swapping algorithm is
 \subsection{n/2 and n/8 bounds}
+the number of good swaps is between n and n/2. also, a good swap freezes 1 element 
+at worst and 2 elements at best. use these facts to derive these bounds.
 \subsection{n/4 bound - show derivation of p1 and p2 but explain why recurrence is naive}
+introduce the recurrence, show how p1 and p2 are derived, but state that the uniformity
+does not hold when recursing, but still through simulation the running time seems very close to $n^2/4$
 \subsection{swaps within derangements of size n lead to stable distribution - degree argument}
-degree is ${n \choose 2} - n + l_2 $
+here we attempt to explain why although derangements don't behave uniformly
+like permutations, maybe we can assume some sort of uniformity. 
+show how we find that the
+degree, also known as the number of 0 swaps in a derangement, is ${n \choose 2} - n + l_2 $, 
+we see the degree is dominated by the ${n \choose 2}$ term
+\subsection{other mentions?}
+the degree from n - 1 derangements to n derangements is uniform: n * (n - 1)
+the degree from n - 2 derangements to n derangements is uniform: n * (n - 1) / 2
 
 \section{Adversary}
 \subsection{describing the adversary}
+setting up the bipartite graph, maintaining a matching, explain that all elements
+are determined when a matching is unique.
 \subsection{implementation}
+talk about or show code of the implementation
 \subsection{$n^2$ lower bound}
+given the setup of the adversary, show that $\Omega(n^2)$ edges must have been removed 
+before reaching a unique matching
 
 \end{document}

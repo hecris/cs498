@@ -1,4 +1,5 @@
 \documentclass{article}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -141,19 +142,37 @@ the derangement we constructed, namely $[6, 7, 8, 9, 3, 4, 5, 2, 1, 0]$.
 We spent some time trying to find a way to generalize this structure. One can revisit this by looking
 at the cycle decomposition of this worst case derangement.
 
+TODO Expected running time of the determinstic algorithm.
+
 Before, we observed that each iteration of the algorithm would circularly shift a subarray of elements.
 It is because of this fact that some elements can be unintentionally frozen. This led to some roadblocks
 in finding a nice recurrence for the running time of the determinstic algorithm. Although, because the
 change to the array can be characterized nicely (circular shift to some elements), we did spend some time
 trying to find how many derangements are there such that not only is every element not in its correct place
-but also not in the index before its correct one.
+but also not in the index before its correct one. If we found a nice answer to this, we could've possible
+described the running time as 
+
+$ T(N) = \sum_{k = }^{}{}$
 
 Although we were not able to find a recurrence for the running time, through simulations we found that
 the deterministic algorithm took around $N^2/6$ swaps.
 
+TODO we tried to find a recurrence for this
+
 
 \subsection{Case where array has k distinct values}
-mention the o(nk) algorithm
+As the introduction mentioned, we have a lower bound of $\Omega(N^2)$ swaps on any blind sorting algorithm.
+In this section,
+we go over a case that would break our lower bound. In particular, if the array of length $N$ only
+contains numbers from a set of $K$ elements (for example $\{1, ..., K\}$) for $ 1 \leq K \leq N $, then we have a 
+deterministic $O(NK)$ algorithm as follows: we always maintain a pointer to the first nonfrozen index
+from the left, call it $i$. In each iteration, we swap $i$ with all indices $j$ such that $j > i$. 
+At any time if index $i$ is frozen, we increment $i$ by 1. In each iteration, when we finish scanning all $j$, we
+repeat and our algorithm stops when $i > N$, that is, all elements are frozen.
+Notice that in each iteration $i$, all instances of the $i$th smallest element in $K$ will be fixed.
+Thus, we will have at most $K$ iterations, each performing $O(N)$ swaps so in total $O(NK)$ swaps.
+Note that for the general case $K = N$, this algorithm is still $O(N^2)$.
+
 \section{Probabilistic Algorithm}
 state what the random swapping algorithm is
 \subsection{n/2 and n/8 bounds}

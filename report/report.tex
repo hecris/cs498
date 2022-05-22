@@ -124,7 +124,7 @@ For an even $N$, the number of iterations is $N / 2$. So, the total number of sw
 $N + (N - 1) + ... + \frac{N}{2}$. We can describe this as a difference of two sums and solve:
 
 \begin{align}
-    & \sum_{i = 1}^{N}{i} - \sum_{i = 1}^{\frac{N}{2} - 1}{i}  \\\nonumber
+    & \sum_{i = 1}^{N - 1}{i} - \sum_{i = 1}^{\frac{N}{2} - 1}{i}  \\\nonumber
     &= \frac{N(N-1)}{2} - \frac{(\frac{N}{2})(\frac{N}{2} - 1)}{2} \\\nonumber
     &= \frac{N(N-1)}{2} - \frac{(2N)(\frac{N}{2} - 1)}{8} \\\nonumber
     &= \frac{N^2 - N}{2} - \frac{N^2 - 2N}{8} \\\nonumber

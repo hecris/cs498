@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{adversary} \PYG{k+kn}{import} \PYG{n}{Adversary}
+
+\PYG{k}{def} \PYG{n+nf}{deterministic}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+    \PYG{n}{A} \PYG{o}{=} \PYG{n}{Adversary}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+    \PYG{n}{frozen} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{()}
+    \PYG{n}{swaps} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+        \PYG{n}{j} \PYG{o}{=} \PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}
+        \PYG{k}{while} \PYG{n}{i} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{frozen}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{j} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{frozen}\PYG{p}{:}
+                \PYG{n}{frozen}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{A}\PYG{o}{.}\PYG{n}{swap}\PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{))}
+                \PYG{n}{swaps} \PYG{o}{+=} \PYG{l+m+mi}{1}
+            \PYG{n}{j} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+    \PYG{k}{print}\PYG{p}{(}\PYG{n}{A}\PYG{o}{.}\PYG{n}{original\PYGZus{}array}\PYG{p}{())}
+    \PYG{k}{return} \PYG{n}{swaps}
+\end{Verbatim}

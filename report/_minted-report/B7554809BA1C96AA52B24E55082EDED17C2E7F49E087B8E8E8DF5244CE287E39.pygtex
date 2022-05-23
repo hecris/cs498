@@ -1,0 +1,99 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{collections} \PYG{k+kn}{import} \PYG{n}{defaultdict}
+
+\PYG{k}{class} \PYG{n+nc}{Adversary}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{n}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} no derangements for n \PYGZlt{} 2}
+        \PYG{k}{assert} \PYG{o+ow}{not} \PYG{n}{n} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{2}
+
+        \PYG{c+c1}{\PYGZsh{} build graph}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}element\PYGZob{}\PYGZcb{}\PYGZsq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{p}{)} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph} \PYG{o}{=} \PYG{n}{defaultdict}\PYG{p}{(}\PYG{n+nb}{set}\PYG{p}{)}
+
+        \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{element} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+                \PYG{k}{if} \PYG{n}{i} \PYG{o}{!=} \PYG{n}{j}\PYG{p}{:}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{element}\PYG{p}{]}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{j}\PYG{p}{)}
+
+                \PYG{k}{if} \PYG{p}{(}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{n}{n} \PYG{o}{==} \PYG{n}{j}\PYG{p}{:}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}reverse\PYGZus{}edge}\PYG{p}{(}\PYG{n}{element}\PYG{p}{,} \PYG{n}{j}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}reverse\PYGZus{}edge}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{u}\PYG{p}{,} \PYG{n}{v}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{u}\PYG{p}{]}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{v}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{v}\PYG{p}{]}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{u}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}is\PYGZus{}in\PYGZus{}matching}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{element}\PYG{p}{,} \PYG{n}{idx}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{idx}\PYG{p}{]} \PYG{o}{==} \PYG{p}{\PYGZob{}}\PYG{n}{element}\PYG{p}{\PYGZcb{}}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}exist\PYGZus{}path}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{u}\PYG{p}{,} \PYG{n}{v}\PYG{p}{):}
+        \PYG{n}{seen} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{()}
+        \PYG{n}{path} \PYG{o}{=} \PYG{p}{[]}
+
+        \PYG{k}{def} \PYG{n+nf}{dfs}\PYG{p}{(}\PYG{n}{node}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{node} \PYG{o}{==} \PYG{n}{v}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n+nb+bp}{True}
+
+            \PYG{k}{if} \PYG{n}{node} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{seen}\PYG{p}{:}
+                \PYG{n}{seen}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{node}\PYG{p}{)}
+                \PYG{k}{for} \PYG{n}{adj} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{node}\PYG{p}{]:}
+                    \PYG{n}{path}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{n}{node}\PYG{p}{,} \PYG{n}{adj}\PYG{p}{))}
+                    \PYG{n}{found} \PYG{o}{=} \PYG{n}{dfs}\PYG{p}{(}\PYG{n}{adj}\PYG{p}{)}
+                    \PYG{k}{if} \PYG{n}{found}\PYG{p}{:}
+                        \PYG{k}{return} \PYG{n+nb+bp}{True}
+                    \PYG{n}{path}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{()}
+
+            \PYG{k}{return} \PYG{n+nb+bp}{False}
+
+        \PYG{k}{return} \PYG{n}{dfs}\PYG{p}{(}\PYG{n}{u}\PYG{p}{),} \PYG{n}{path}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}attempt\PYGZus{}remove}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{idx}\PYG{p}{,} \PYG{n}{element}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} if edge is not in matching, simply remove}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}is\PYGZus{}in\PYGZus{}matching}\PYG{p}{(}\PYG{n}{element}\PYG{p}{,} \PYG{n}{idx}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{idx} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{element}\PYG{p}{]:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{element}\PYG{p}{]}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{idx}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n+nb+bp}{True}
+
+        \PYG{c+c1}{\PYGZsh{} try to remove, and see if there is an alternating path}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{idx}\PYG{p}{]}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{element}\PYG{p}{)}
+        \PYG{n}{found}\PYG{p}{,} \PYG{n}{path} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}exist\PYGZus{}path}\PYG{p}{(}\PYG{n}{element}\PYG{p}{,} \PYG{n}{idx}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{found}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{u}\PYG{p}{,} \PYG{n}{v} \PYG{o+ow}{in} \PYG{n}{path}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}reverse\PYGZus{}edge}\PYG{p}{(}\PYG{n}{u}\PYG{p}{,} \PYG{n}{v}\PYG{p}{)}
+
+            \PYG{k}{return} \PYG{n+nb+bp}{True}
+
+        \PYG{c+c1}{\PYGZsh{} no alternating path found, edge cannot be removed.}
+        \PYG{c+c1}{\PYGZsh{} add edge back into graph}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{idx}\PYG{p}{]}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{element}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n+nb+bp}{False}
+
+    \PYG{k}{def} \PYG{n+nf}{swap}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} perform swap}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements}\PYG{p}{[}\PYG{n}{j}\PYG{p}{],} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+
+        \PYG{c+c1}{\PYGZsh{} initialize return value}
+        \PYG{n}{frozen} \PYG{o}{=} \PYG{p}{[]}
+
+        \PYG{c+c1}{\PYGZsh{} can we say elements[i] cannot be in position i}
+        \PYG{n}{removed} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}attempt\PYGZus{}remove}\PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{removed}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} if can\PYGZsq{}t remove, add it to frozen}
+            \PYG{n}{frozen}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{i}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} repeat for j}
+        \PYG{n}{removed} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}attempt\PYGZus{}remove}\PYG{p}{(}\PYG{n}{j}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements}\PYG{p}{[}\PYG{n}{j}\PYG{p}{])}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{removed}\PYG{p}{:}
+            \PYG{n}{frozen}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{j}\PYG{p}{)}
+
+        \PYG{k}{return} \PYG{n}{frozen}
+
+    \PYG{k}{def} \PYG{n+nf}{original\PYGZus{}array}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n}{n} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{elements}\PYG{p}{)}
+        \PYG{n}{arr} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb+bp}{None}\PYG{p}{]} \PYG{o}{*} \PYG{n}{n}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+            \PYG{n}{element} \PYG{o}{=} \PYG{n+nb}{next}\PYG{p}{(}\PYG{n+nb}{iter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{graph}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]))}
+            \PYG{n}{element\PYGZus{}number} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{element}\PYG{o}{.}\PYG{n}{strip}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}element\PYGZsq{}}\PYG{p}{))}
+            \PYG{n}{arr}\PYG{p}{[}\PYG{n}{element\PYGZus{}number}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}
+
+        \PYG{k}{return} \PYG{n}{arr}
+\end{Verbatim}

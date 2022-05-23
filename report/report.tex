@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{minted}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -175,7 +176,7 @@ a simple randomized algorithm: repeatedly swap random pairs of elements until th
 (or all elements are frozen). It turns out that this algorithm runs in expected $\Theta(N^2)$
 time. 
 
-\subsection{n/2 and n/8 bounds}
+\subsection{Expected Number of Swaps is Between $N^2/2$ and $N^2/8$}
 As mentioned before, the number of good swaps in a derangement size $N$ 
 is $N - c_2$ where $c_2$ is the number
 of $2$-cycles. Since $c_2$ must be between $0$ and $N/2$, then the number of good swaps
@@ -199,9 +200,50 @@ Although we have these worst and best case lower bounds $\frac{N^2}{2}$ and $\fr
 through simulations we observed that it takes almost exactly $\frac{N^2}{4}$ swaps.
 In the next sections, we derive a recurrence to get a more exact expected running time.
 
-\subsection{n/4 bound - show derivation of p1 and p2 but explain why recurrence is naive}
-introduce the recurrence, show how p1 and p2 are derived, but state that the uniformity
-does not hold when recursing, but still through simulation the running time seems very close to $n^2/4$
+\subsection{Recurrence for a more exact running time $N^2/4$}
+
+Observe that performing a swap freezes 0, 1, or 2 elements. Thus we can write a recurrence
+for the expected number of swaps to sort an derangement of size N.
+\begin{align}
+    & T(N) = p_0T(N) + p_1T(N - 1) + p_2T(N - 2) \\\nonumber
+    & T(N) - p_0T(N) = p_1T(N - 1) + p_2T(N - 2) \\\nonumber
+    & T(N)(1 - p_0) = p_1T(N - 1) + p_2T(N - 2) \\\nonumber
+    & T(N) = \frac{p_1T(N - 1) + p_2T(N - 2)}{1 - p_0} \\\nonumber
+    & T(N) = \frac{p_1T(N - 1) + p_2T(N - 2)}{p1 + p2} \\\nonumber
+\end{align}
+
+Where $p_1$ and $p_2$ are the probabilities of a $1$-swap and a $2$-swap, respectively.
+So how can we find $p_1$ and $p_2$?
+Let's start by looking for $p_2$. Let's say we have
+a derangement A of size N and we pick $i$ and $j$. If $(i ,j)$ is a $2$-swap, that is,
+$A[i] = j$ and $A[j] = i$. We know the position of two elements and the rest of the $N - 2$ elements
+are deranged. So $p_2 = \frac{!(N - 2)}{!N}$. Since the number of derangements of size N is approximately
+$\frac{N!}{e}$, then $p_2 \approx \frac{1}{N(N - 1)}$.
+Now we try to find $p_1$. Let $g$ be the number of good swaps, $g_1$ be the number of $1$-swaps
+and $g_2$ be the number of $2$-swaps. We have
+\begin{align}
+    & E[g] = E[g_1] + E[g_2] \\\nonumber
+    & N - \frac{1}{2} = E[g_1] + \frac{1}{2} \\\nonumber
+    & E[g_1] = N - 1  \\\nonumber
+\end{align}
+We have
+\begin{align}
+    p_1 * {N \choose 2} = E[g_1] \\\nonumber
+    p_1 = E[g_1] * \frac{2}{N(N - 1)} \\\nonumber
+    p_1 = (N - 1) * \frac{2}{N(N - 1)} \\\nonumber
+    p_1 = \frac{2}{(N - 1)} - \frac{2}{N(N - 1)} \\\nonumber
+    p_1 = \frac{2N}{N(N - 1)} - \frac{2}{N(N - 1)} \\\nonumber
+    p_1 = \frac{2}{N}
+\end{align}
+
+Plugging in these values for $p_1$ and $p_2$ in the recurrence and running it shows
+that $T(N) \approx \frac{N^2}{4}$.
+
+Now observe that to calculate $p_1$ and $p_2$ we assumed we started with any random derangement
+with equal probability. If we, for example, perform a $2-swap$, it is expected that any 
+derangement of size $N - 2$ is equally likely to be a result of this swap. 
+
+
 \subsection{swaps within derangements of size n lead to stable distribution - degree argument}
 here we attempt to explain why although derangements don't behave uniformly
 like permutations, maybe we can assume some sort of uniformity. 
@@ -214,10 +256,159 @@ the degree from n - 2 derangements to n derangements is uniform: n * (n - 1) / 2
 
 \section{Adversary}
 \subsection{describing the adversary}
+Consider an adversary that tries to slow a blind sorting algorithm by delaying, as much as possible, any
+element from freezing.
+That is, if an algorithm performs a swap $(i, j)$, the adversary will try to claim that $A[i] \neq j$ and
+$A[j] \neq i$. Of course, with enough swaps the adversary can no longer claim that an element doesn't
+belong in a certain index. For example, if an element has visited $N - 1$ indices and still hasn't been frozen,
+then we know it must belong in that $1$ other index.
+
+With that, let's define a bipartite graph that
+the adversary will maintain $G(V, E)$ where
+the vertex set $V$ is split into two sets $L = {l_1, l_2, ..., l_n}$ and $I = {i_1, i_2, ..., i_n}$.
+The set $L$ represents the elements of the array and the set $I$ represents the indices of the array.
+We say an edge exists from vertex $l$ to vertex $i$ if the element $l$ can possibly be in index $i$.
+
+When an algorithm performs a swap $(i, j)$ the adversary will say element $l = A[i]$ can not be in index $j$.
+Thus, the edge going from $l$ to $j$ will be removed. The analagous edge for element $A[j]$ will also be removed.
+
+
+
 setting up the bipartite graph, maintaining a matching, explain that all elements
 are determined when a matching is unique.
 \subsection{implementation}
-talk about or show code of the implementation
+
+\begin{minted}{python}
+from collections import defaultdict
+
+class Adversary:
+    def __init__(self, n):
+        # no derangements for n < 2
+        assert not n < 2
+
+        # build graph
+        self.elements = ['element{}'.format(i) for i in range(n)]
+        self.graph = defaultdict(set)
+
+        for i, element in enumerate(self.elements):
+            for j in range(n):
+                if i != j:
+                    self.graph[element].add(j)
+
+                if (i + 1) % n == j:
+                    self._reverse_edge(element, j)
+
+    def _reverse_edge(self, u, v):
+        self.graph[u].remove(v)
+        self.graph[v].add(u)
+
+    def _is_in_matching(self, element, idx):
+        return self.graph[idx] == {element}
+
+    def _exist_path(self, u, v):
+        seen = set()
+        path = []
+
+        def dfs(node):
+            if node == v:
+                return True
+
+            if node not in seen:
+                seen.add(node)
+                for adj in self.graph[node]:
+                    path.append((node, adj))
+                    found = dfs(adj)
+                    if found:
+                        return True
+                    path.pop()
+
+            return False
+
+        return dfs(u), path
+
+    def _attempt_remove(self, idx, element):
+        # if edge is not in matching, simply remove
+        if not self._is_in_matching(element, idx):
+            if idx in self.graph[element]:
+                self.graph[element].remove(idx)
+            return True
+
+        # try to remove, and see if there is an alternating path
+        self.graph[idx].remove(element)
+        found, path = self._exist_path(element, idx)
+        if found:
+            for u, v in path:
+                self._reverse_edge(u, v)
+
+            return True
+
+        # no alternating path found, edge cannot be removed.
+        # add edge back into graph
+        self.graph[idx].add(element)
+        return False
+
+    def swap(self, i, j):
+        # perform swap
+        self.elements[i], self.elements[j] = self.elements[j], self.elements[i]
+
+        # initialize return value
+        frozen = []
+
+        # can we say elements[i] cannot be in position i
+        removed = self._attempt_remove(i, self.elements[i])
+        if not removed:
+            # if can't remove, add it to frozen
+            frozen.append(i)
+
+        # repeat for j
+        removed = self._attempt_remove(j, self.elements[j])
+        if not removed:
+            frozen.append(j)
+
+        return frozen
+
+    def original_array(self):
+        n = len(self.elements)
+        arr = [None] * n
+        for i in range(n):
+            element = next(iter(self.graph[i]))
+            element_number = int(element.strip('element'))
+            arr[element_number] = i
+
+        return arr
+\end{minted}
+
+Implementation of the deterministic algorithm that plays against the adversary
+\begin{minted}{python}
+from adversary import Adversary
+
+def deterministic(n):
+    A = Adversary(n)
+    frozen = set()
+    swaps = 0
+
+    for i in range(n):
+        j = i + 1
+        while i not in frozen:
+            if j not in frozen:
+                frozen.update(A.swap(i, j))
+                swaps += 1
+            j += 1
+
+    print(A.original_array())
+    return swaps
+\end{minted}
+
+When the determinstic algorithm plays against the adversary for $N = 10$, the result of 
+\begin{verbatim}
+    print(A.original_array())
+\end{verbatim}
+is
+\begin{verbatim}
+    [6, 7, 8, 9, 10, 5, 4, 3, 2, 1]
+\end{verbatim}
+which is consistent with the worst case input we attempted to build earlier (along with the number of swaps).
+
 \subsection{$n^2$ lower bound}
 given the setup of the adversary, show that $\Omega(n^2)$ edges must have been removed 
 before reaching a unique matching

@@ -121,7 +121,7 @@ $[1, 2, 3, 4, 5, 6, 7, 8]$
 
 And the array is sorted. In general, each iteration $i$ performs $N - i$ swaps.
 For an even $N$, the number of iterations is $N / 2$. So, the total number of swaps is
-$N + (N - 1) + ... + \frac{N}{2}$. We can describe this as a difference of two sums and solve:
+$(N - 1) + ... + \frac{N}{2}$. We can describe this as a difference of two sums and solve:
 
 \begin{align}
     & \sum_{i = 1}^{N - 1}{i} - \sum_{i = 1}^{\frac{N}{2} - 1}{i}  \\\nonumber
@@ -142,23 +142,19 @@ the derangement we constructed, namely $[6, 7, 8, 9, 3, 4, 5, 2, 1, 0]$.
 We spent some time trying to find a way to generalize this structure. One can revisit this by looking
 at the cycle decomposition of this worst case derangement.
 
-TODO Expected running time of the determinstic algorithm.
-
 Before, we observed that each iteration of the algorithm would circularly shift a subarray of elements.
-It is because of this fact that some elements can be unintentionally frozen. This led to some roadblocks
-in finding a nice recurrence for the running time of the determinstic algorithm. Although, because the
+Because of this, some elements can be unintentionally frozen. This led to some roadblocks
+in finding a nice recurrence for the running time of the deterministic algorithm. Although, because the
 change to the array can be characterized nicely (circular shift to some elements), we did spend some time
-trying to find how many derangements are there such that not only is every element not in its correct place
-but also not in the index before its correct one. If we found a nice answer to this, we could've possible
+trying to find how many derangements are there such that 
+$k$ elements are in the index before their correct ones (so $k$ elements would be shifted and frozen).
+If we found a nice answer to this, we could've
 described the running time as 
 
-$ T(N) = \sum_{k = }^{}{}$
+$ T(N) = \sum_{k = 1}^{N}{p_k * T(N - k)}$
 
 Although we were not able to find a recurrence for the running time, through simulations we found that
 the deterministic algorithm took around $N^2/6$ swaps.
-
-TODO we tried to find a recurrence for this
-
 
 \subsection{Case where array has k distinct values}
 As the introduction mentioned, we have a lower bound of $\Omega(N^2)$ swaps on any blind sorting algorithm.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.7.7)  23 MAY 2022 10:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.7.7)  23 MAY 2022 10:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -109,7 +109,7 @@ File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
 \l__kernel_color_stack_int=\count187
 \l__pdf_internal_box=\box47
 )
-No file report.aux.
+(./report.aux)
 \openout1 = `report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
@@ -128,7 +128,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
 LaTeX Font Info:    Trying to load font information for U+msa on input line 12.
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+ (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 12.
@@ -155,8 +155,8 @@ Package amsmath Warning: Foreign command \atopwithdelims;
 
 [2] [3] [4] [5] [6] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 1614 strings out of 481239
- 20125 string characters out of 5920378
+ 1616 strings out of 481239
+ 20147 string characters out of 5920378
  255588 words of memory out of 5000000
  16911 multiletter control sequences out of 15000+600000
  539893 words of font info for 54 fonts, out of 8000000 for 9000
@@ -176,7 +176,7 @@ fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/ty
 pe1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
 ic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmsy7.pfb>
-Output written on report.pdf (6 pages, 153773 bytes).
+Output written on report.pdf (6 pages, 153810 bytes).
 PDF statistics:
  79 PDF objects out of 1000 (max. 8388607)
  56 compressed objects within 1 object stream

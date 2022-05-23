@@ -174,10 +174,35 @@ Thus, we will have at most $K$ iterations, each performing $O(N)$ swaps so in to
 Note that for the general case $K = N$, this algorithm is still $O(N^2)$.
 
 \section{Probabilistic Algorithm}
-state what the random swapping algorithm is
+In the previous section we describe a deterministic algorithm to sort the array. We introduce
+a simple randomized algorithm: repeatedly swap random pairs of elements until the array is sorted
+(or all elements are frozen). It turns out that this algorithm runs in expected $\Theta(N^2)$
+time. 
+
 \subsection{n/2 and n/8 bounds}
-the number of good swaps is between n and n/2. also, a good swap freezes 1 element 
-at worst and 2 elements at best. use these facts to derive these bounds.
+As mentioned before, the number of good swaps in a derangement size $N$ 
+is $N - c_2$ where $c_2$ is the number
+of $2$-cycles. Since $c_2$ must be between $0$ and $N/2$, then the number of good swaps
+is between $N$ and $N/2$. We consider the best case where there are $N$ good swaps.
+Then the probability of a good swap is $\frac{N}{{N \choose 2}} = \frac{2}{N - 1}$.
+Given the probability of a good swap, we expect to perform $\frac{N - 1}{2}$ swaps before we 
+freeze at least one element. Since we are considering the best case, let's assume our
+good swap freezes two elements. Then we now have derangement of size $N - 2$ that, in the best
+case, has $N - 2$ good swaps. Thus we have the sum
+$\frac{1}{2}((N - 1) + (N - 3) + (N - 5) + ... + 3 + 1) = \frac{1}{2}(\frac{N^2}{4}) = \frac{N^2}{8} $.
+
+Similarly, let's consider the worst case where there are $N/2$ good swaps. Then the probability
+of a good swap is $\frac{1}{N - 1}$ so we expect to perform $N - 1$ swaps before freezing
+something. Since we are considering the worst case, let's assume we only freeze one element.
+So now we have a derangement of size $N - 1$, and we expect to perform $N - 2$ swaps before
+freezing. Thus we have the sum
+$ N - 1 + N - 2 + ... = {N \choose 2} $
+
+Thus the expected running time of the random swapping algorithm is $\Theta(N^2)$.
+Although we have these worst and best case lower bounds $\frac{N^2}{2}$ and $\frac{N^2}{8}$,
+through simulations we observed that it takes almost exactly $\frac{N^2}{4}$ swaps.
+In the next sections, we derive a recurrence to get a more exact expected running time.
+
 \subsection{n/4 bound - show derivation of p1 and p2 but explain why recurrence is naive}
 introduce the recurrence, show how p1 and p2 are derived, but state that the uniformity
 does not hold when recursing, but still through simulation the running time seems very close to $n^2/4$

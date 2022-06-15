@@ -240,19 +240,65 @@ Plugging in these values for $p_1$ and $p_2$ in the recurrence and running it sh
 that $T(N) \approx \frac{N^2}{4}$.
 
 Now observe that to calculate $p_1$ and $p_2$ we assumed we started with any random derangement
-with equal probability. If we, for example, perform a $2-swap$, it is expected that any 
-derangement of size $N - 2$ is equally likely to be a result of this swap. 
-
+with equal probability. If we, for example, perform a $1-swap$, it is expected that any 
+derangement of size $N - 1$ is equally likely to be a result of this swap. However,
+through brute force calculation of derangements from size $5$ to $4$, it was revealed to us that
+not all derangements of size $4$ are equally likely to be a result of a $1$-swap. This is a 
+problem for our recurrence, as our recurrence assumes the derangements we start with are
+uniformly distributed.
 
 \subsection{swaps within derangements of size n lead to stable distribution - degree argument}
-here we attempt to explain why although derangements don't behave uniformly
-like permutations, maybe we can assume some sort of uniformity. 
-show how we find that the
-degree, also known as the number of 0 swaps in a derangement, is ${n \choose 2} - n + l_2 $, 
-we see the degree is dominated by the ${n \choose 2}$ term
-\subsection{other mentions?}
-the degree from n - 1 derangements to n derangements is uniform: n * (n - 1)
-the degree from n - 2 derangements to n derangements is uniform: n * (n - 1) / 2
+As highlighted in the previous section, when performing a $1$-swap and transitioning to a 
+derangement of size $N - 1$, it is not true that all derangements of size $N - 1$ are
+equally likely to occur, even though the recurrence assumes this property. This is
+also the case for $N - 2$. Even then, through simulations we see that the average
+number of swaps is consistent with our recurrence: $\frac{N^2}{4}$. In this section, we provide an argument for this.
+In comes from the fact that the probability of a $0$-swap is much higher than $1$-swap or $2$-swap, thus
+many $0$-swaps will be performed before eventually freezing something. We want to show that even if we start
+off with a non uniform distribution of derangements size $N$, after performing $0$-swaps the distribution
+will eventually stabilize into uniform. To see this, imagine a graph where the nodes are derangements
+size $N$ and there exists an edge between two derangements if there is a $0$-swap from one to another.
+Then we look at the degree of a derangement (aka the number of $0$-swaps in that particular derangement).
+How can we find the degree of a derangement?
+
+Let $D$ be a derangement of length $n$ with cycle decomposition $c_1, c_2, ..., c_k$.
+Let $l_2$ be the number of cycles with length $2$.
+We know the number of $0$-swaps in the derangement (or the degree) is
+
+\[
+    \sum_{i}{({c_i \choose 2} - c_i)} + \sum_{i, j}{{c_i}{c_j}} + l_2 
+\]
+\[
+    = \sum_{i}{c_i \choose 2} + \sum_{i, j}{{c_i}{c_j}} - n + l_2 
+\]
+Note that we add $l_2$ because if $c_i$ is length 2 then 
+$ {c_i \choose 2} - c_i = -1 $ thus we add $l_2$ to "ignore" the cycles of length 2.
+
+I argue that the degree is ${n \choose 2} - n + l_2$. That is,
+
+\[
+    \sum_{i}{c_i \choose 2} + \sum_{i, j}{{c_i}{c_j}} - n + l_2 = {n \choose 2} - n  + l_2
+\]
+or equivalently,
+\[
+    \sum_{i}{c_i \choose 2} + \sum_{i, j}{{c_i}{c_j}} = {n \choose 2}
+\]
+
+\begin{proof}
+        \begin{align}
+            & \sum_{i}{c_i \choose 2} + \sum_{i, j}{{c_i}{c_j}}  \\\nonumber
+            &=  \sum_{i}{c_i \choose 2} + \frac{(\sum_{i}{c_i})^2 - \sum_{i}{{c_i}^2}}{2} \\\nonumber
+            &=  \frac{\sum_{i}{c_i(c_i -1)} + (\sum_{i}{c_i})^2 - \sum_{i}{{c_i}^2}}{2} \\\nonumber
+            &=  \frac{n^2 + \sum_{i}{c_i(c_i - 1)} - \sum_{i}{{c_i}^2}}{2} \\\nonumber
+            &=  \frac{n^2 - \sum_{i}{c_i}}{2} \\\nonumber
+            &=  \frac{n^2 - n}{2} \\\nonumber
+            &=  {n \choose 2}
+        \end{align}
+\end{proof}
+
+Now, we see that the degree, also known as the number of 0 swaps in a derangement, is ${n \choose 2} - n + l_2 $.
+Observe that the degree is dominated by the ${n \choose 2}$ term, so for large $n$, the degree of all of the
+derangements are around the same. If the probability of a derangement corresponds to the degree, then this is a stable distribution.
 
 \section{Adversary}
 \subsection{describing the adversary}

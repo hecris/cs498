@@ -272,12 +272,14 @@ We say an edge exists from vertex $l$ to vertex $i$ if the element $l$ can possi
 When an algorithm performs a swap $(i, j)$ the adversary will say element $l = A[i]$ can not be in index $j$.
 Thus, the edge going from $l$ to $j$ will be removed. The analagous edge for element $A[j]$ will also be removed.
 
+In this bipartite graph, there must be a (maximum) matching at all times between the set of elements and the set
+of indices. This matching represents a permutation of the array that is consistent with the swaps
+performed so far. When a swap is requested, before removing the edge,
+we must determine if after removing the edge if there is still a possible matching. If there isn't, then the adversary
+can not claim that the element doesn't belong in this position. Therefore, it must report to the algorithm that
+the element is frozen. In the next section, we will see how to implement this idea.
 
-
-setting up the bipartite graph, maintaining a matching, explain that all elements
-are determined when a matching is unique.
-\subsection{implementation}
-
+\subsection{Implementation}
 \begin{minted}{python}
 from collections import defaultdict
 
@@ -410,7 +412,11 @@ is
 which is consistent with the worst case input we attempted to build earlier (along with the number of swaps).
 
 \subsection{$n^2$ lower bound}
-given the setup of the adversary, show that $\Omega(n^2)$ edges must have been removed 
-before reaching a unique matching
+All elements are frozen when the matching in our graph is unique. That is, if we remove an edge
+in the matching from the graph, then no other matching can be found. Let's consider two edges in the final
+matching $(u, v)$ and $(k, l)$. We know that at least the edge $(u, l)$ or the edge $(v, k)$ must have been removed
+from the graph, otherwise the matching is not unique. That is, for any pair of two edges (we have ${N \choose 2} - N$ pairs, since initially we are missing $N$ edges)
+, we know at least $1$ edge has been removed. Since a swap removes at most $2$ edges, then at least $\frac{{N \choose 2} - N}{2}$ swaps have been performed,
+thus establishing a lower bound of $\Omega(N^2)$ swaps for any Blind sorting algorithm.
 
 \end{document}

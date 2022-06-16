@@ -337,6 +337,37 @@ Now, we see that the degree, also known as the number of 0 swaps in a derangemen
 Observe that the degree is dominated by the ${n \choose 2}$ term, so for large $n$, the degree of all of the
 derangements are around the same. If the probability of a derangement corresponds to the degree, then this is a stable distribution.
 
+\subsection{Transitioning to smaller derangements}
+In the previous section, we study the action of performing a $0$-swap, aka going from derangement
+size $n$ to derangement size $n$. In this section, we introduce some findings of going from
+derangement size $n$ to $n - 1$ and $n - 2$. If we can prove that a $1$-swap
+results in a uniform distribution of derangement size $n - 1$ (and similarly for $2$-swap), then we have
+an argument for why the recurrence still holds: even if we start with a nonuniform distribution of
+derangements size $n$, after performing enough $0$-swaps the distribution will stabilize. Then,
+if we can argue the previous statement, then performing a $1$-swap will give us a uniform distribution
+of derangements size $n - 1$.
+
+Imagine a bipartite graph where one set of vertices is the derangements size $n$ and the
+other is the set of derangements size $n - 2$. There is an edge from a derangement size
+$n$ to $n - 2$ if there is a $2$-swap that results in that smaller derangement. 
+In particular, a transition from a derangement size $n$ to $n - 2$ is a $2$-swap followed
+by a renaming of rest $n - 2$ elements.
+Observe that the outdegree of a derangement size $n$ is exactly the number of $2$ cycles ($l_2$).
+So the outdegrees of the derangement size $n$ varies. But, we find that the indegrees of the
+derangement size $n - 2$ is the same, which is ${n \choose 2}$. For the case
+of derangements size $n - 1$, the indegrees are also the same, which is $n(n-1)$.
+
+We can argue this by considering the reverse: how can we get a derangement size $n$ starting
+with a derangement size $n - 1$? Let's take for example $n - 1 = 3$, so an example
+derangement is $[3, 1, 2]$. To get a derangement size $n$, we choose one of the $n$ 
+indices to be frozen. Let say we choose index $2$. So we know the position of one element:
+$[_, _, 2, _]$. We rename the vertices to get $[4, 1, 2, 3]$. Now we have a permutation
+of size $n$, but to make it a derangement we must swap index $2$ with any of the other $n - 1$ indices.
+So we had $n$ choices to pick an index to be frozen, and given that, we have $n - 1$ swaps that would
+result in a derangement. So we have $n(n - 1)$. Given this argument, we can easily see why 
+we get ${n \choose 2}$ in the case of derangements size $n - 2$. We pick two indices to be frozen
+and only one swap would make it a derangement (swapping the two frozen elements) and we have ${n \choose 2}$ pairs.
+
 \section{Adversary}
 \subsection{describing the adversary}
 Consider an adversary that tries to slow a blind sorting algorithm by delaying, as much as possible, any
@@ -363,6 +394,23 @@ can not claim that the element doesn't belong in this position. Therefore, it mu
 the element is frozen. In the next section, we will see how to implement this idea.
 
 \subsection{Implementation}
+The implementation of the adversary is as follows: we represent the graph as an adjacency list.
+Except, instead of having a vertex map to a list we have it mapped to a hash set. This allows
+for expected constant time deletion and insertion of edges.
+
+As mentioned before, there is an directed edge $(l, i)$ if element $l$ can possibly belong to index $i$. 
+If the edge is reversed (i.e $(i, l)$, then that signifies that edge is in our matching.
+Initially, we start with element $l$ being matched to index $l+1$ for $l < n$ and index $1$ for $l = n$.
+
+To reverse an edge $(u, v)$ we simply remove $v$ from $u$'s set and add $u$ to $v$'s set.
+
+When we perform a swap, we attempt to remove the appropriate edges (there are two). Let's say
+we are attempting to remove the edge $(u, v)$. We first remove $v$ from $u$'s vertex set. 
+Then we use depth first search to see if there is an alternating path from $u$ to $v$ still.
+If there is, then we update the matching by reversing the appropriate edges.
+If there isn't a matching, then we can't remove the edge, and we tell the algorithm that
+an element has been frozen.
+
 \begin{minted}{python}
 from collections import defaultdict
 

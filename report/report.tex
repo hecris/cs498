@@ -544,8 +544,7 @@ which is consistent with the worst case input we attempted to build earlier (alo
 All elements are frozen when the matching in our graph is unique. That is, if we remove an edge
 in the matching from the graph, then no other matching can be found. Let's consider two edges in the final
 matching $(u, v)$ and $(k, l)$. We know that at least the edge $(u, l)$ or the edge $(v, k)$ must have been removed
-from the graph, otherwise the matching is not unique. That is, for any pair of two edges
-, we know at least $1$ edge has been removed, so at least ${N \choose 2}$ edges have been removed. Initially, we had $N$ edges
+from the graph, otherwise the matching is not unique. That is, for any pair of two edges, we know at least $1$ edge has been removed, so at least ${N \choose 2}$ edges have been removed. Initially, we had $N$ edges
 already removed, so the rest of the ${N \choose 2} - N$ edges must have been removed via swaps.
 Since a swap removes at most $2$ edges, then at least $\frac{{N \choose 2} - N}{2}$ swaps have been performed,
 thus establishing a lower bound of $\Omega(N^2)$ swaps for any Blind sorting algorithm.

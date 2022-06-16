@@ -250,7 +250,7 @@ Then we have
     &=  cn^2 - \frac{c(4n^2 - 2n - 2) - n(n-1)}{2n - 1} \\\nonumber
     &=  cn^2 - \frac{n^2(4c - 1) - 2nc + n - 2c}{2n - 1} \\\nonumber
 \end{align}
-We are interested in showing $T(n) > cn^2$ so we want $4c - 1 < 0$. this means $c > 1/4$.
+We are interested in showing $T(n) > cn^2$ so we want $4c - 1 > 0$. this means $c > 1/4$.
 Thus we have a lower bound: $T(n) > \frac{1}{4}n^2$.
 
 We now use the substitution method again to show $T(n) < \frac{1}{4}n(n + 1)$. Assume
@@ -265,7 +265,7 @@ $T(m) < \frac{1}{4}m(m+1)$ for $m < n$. Then we have
     &=  cn(n + 1) - \frac{c(4n^2 - 2) - n(n-1)}{2n - 1} \\\nonumber
     &=  cn(n +1) - \frac{n^2(4c - 1) - 2c - n}{2n - 1} \\\nonumber
 \end{align}
-We are interested in showing $T(n) < cn(n + 1)$ so we want $4c - 1 \geq 0$. this means $c \leq 1/4$.
+We are interested in showing $T(n) < cn(n + 1)$ so we want $4c - 1 \leq 0$. this means $c \leq 1/4$.
 Thus we have a upper bound: $T(n) \leq \frac{1}{4}n(n + 1)$.
 
 We have the following result:

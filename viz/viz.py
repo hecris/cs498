@@ -31,9 +31,9 @@ import time
 pygame.init()
 
 # Set up the drawing window
-screen = pygame.display.set_mode([500, 500])
+screen = pygame.display.set_mode([1000, 500])
 WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+BLACK = (100, 100, 100)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 
@@ -43,6 +43,8 @@ N = 10
 arr = generate_derangement(N)
 FONT = pygame.font.SysFont('Arial', 25)
 swaps = 0
+total_swaps = 0
+runs = 0
 
 while running:
 
@@ -56,14 +58,14 @@ while running:
 
     start = 10
     pos = start
-    BOX_SIZE = 30
+    BOX_SIZE = 50
     # Draw a solid blue circle in the center
     rect_objs = []
     for i, x in enumerate(arr):
         color = BLUE if i == x else BLACK
         rect_obj = pygame.draw.rect(screen, (color), (pos, 250, BOX_SIZE, BOX_SIZE), 2)
         rect_objs.append(rect_obj)
-        text_surface_object = FONT.render(str(x), True, BLACK)
+        text_surface_object = FONT.render(str(x), True, color)
         text_rect = text_surface_object.get_rect(center=rect_obj.center)
         screen.blit(text_surface_object, text_rect)
         pos += BOX_SIZE
@@ -74,17 +76,22 @@ while running:
         rect_obj = pygame.draw.rect(screen, (RED), (start + BOX_SIZE * j, 250, BOX_SIZE, BOX_SIZE), 2)
         arr[i], arr[j] = arr[j], arr[i]
         swaps += 1
-    else:
-        arr = generate_derangement(N)
-        pygame.time.wait(1000)
-        swaps = 0
 
     screen.blit(FONT.render('swaps: {}'.format(swaps), True, BLACK), (0,0))
+    if runs > 0:
+        screen.blit(FONT.render('avg: {}'.format(total_swaps / runs), True, BLACK), (0,30))
+        screen.blit(FONT.render('runs: {}'.format(runs), True, BLACK), (0,60))
 
 
     # Flip the display
     pygame.display.flip()
     pygame.time.wait(1000)
+    if i == -1:
+        pygame.time.wait(1000)
+        total_swaps += swaps
+        runs += 1
+        arr = generate_derangement(N)
+        swaps = 0
     # time.sleep(1)
 
 # Done! Time to quit.

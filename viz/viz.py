@@ -1,3 +1,4 @@
+from collections import Counter
 import numpy as np
 import random
 
@@ -39,12 +40,14 @@ RED = (255, 0, 0)
 
 # Run until the user asks to quit
 running = True
-N = 10
+N = int(input('N: '))
 arr = generate_derangement(N)
 FONT = pygame.font.SysFont('Arial', 25)
 swaps = 0
+total_swaps_avg = 0
 total_swaps = 0
 runs = 0
+counter = Counter()
 
 while running:
 
@@ -72,15 +75,22 @@ while running:
 
     i, j = generate_swap(arr)
     if i != -1:
-        rect_obj = pygame.draw.rect(screen, (RED), (start + BOX_SIZE * i, 250, BOX_SIZE, BOX_SIZE), 2)
-        rect_obj = pygame.draw.rect(screen, (RED), (start + BOX_SIZE * j, 250, BOX_SIZE, BOX_SIZE), 2)
+        swap_type = int(arr[j] == i) + int(arr[i] == j)
+        counter[swap_type] += 1
         arr[i], arr[j] = arr[j], arr[i]
         swaps += 1
+        total_swaps += 1
+        rect_obj = pygame.draw.rect(screen, (RED), (start + BOX_SIZE * i, 250, BOX_SIZE, BOX_SIZE), 2)
+        rect_obj = pygame.draw.rect(screen, (RED), (start + BOX_SIZE * j, 250, BOX_SIZE, BOX_SIZE), 2)
 
     screen.blit(FONT.render('swaps: {}'.format(swaps), True, BLACK), (0,0))
     if runs > 0:
-        screen.blit(FONT.render('avg: {}'.format(total_swaps / runs), True, BLACK), (0,30))
-        screen.blit(FONT.render('runs: {}'.format(runs), True, BLACK), (0,60))
+        screen.blit(FONT.render('avg: {}'.format(total_swaps_avg / runs), True, BLACK), (0,30))
+    screen.blit(FONT.render('runs: {}'.format(runs), True, BLACK), (0,60))
+    if total_swaps > 0:
+        screen.blit(FONT.render('0-swaps: {}/{}={}'.format(counter[0],total_swaps,counter[0]/total_swaps), True, BLACK), (0,90))
+        screen.blit(FONT.render('1-swaps: {}/{}={}'.format(counter[1],total_swaps,counter[1]/total_swaps), True, BLACK), (0,120))
+        screen.blit(FONT.render('2-swaps: {}/{}={}'.format(counter[2],total_swaps,counter[2]/total_swaps), True, BLACK), (0,150))
 
 
     # Flip the display
@@ -88,8 +98,8 @@ while running:
     pygame.time.wait(1000)
     if i == -1:
         pygame.time.wait(1000)
-        total_swaps += swaps
         runs += 1
+        total_swaps_avg += swaps
         arr = generate_derangement(N)
         swaps = 0
     # time.sleep(1)

@@ -1,0 +1,94 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\newtheorem{lemma}{Lemma}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+
+\title{Blind selection sort analysis}
+\author{Christopher He}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section{Exact running time}
+
+Let $a$ be a permutation of $1,2, ..., N$.
+Let $inv = \{(i, j) \mid 1 \leq i < j \leq N, a_i > a_j \}$ be the set of inversions of $a$.
+Let $ginv = \{(i, j) \in inv \mid a_j > j\}$ be the set of good inversions.
+Let $inv_k = \{(i, j) \in inv \mid i = k\}$ denote inversions where the left is $k$,
+and similarly define $ginv_k$.
+
+First we proved that if $(i, j) \in inv$ and $a_j$ starts before its correct position ($j$), then
+so does $a_i$.
+
+\begin{lemma}
+    If $(i, j) \in ginv$ then $a_i > i$.
+    \begin{proof}
+        If $(i, j) \in ginv$ then $a_i > a_j > j > i$, so $a_i > i$.
+    \end{proof}
+\end{lemma}
+
+We then proved that if an element starts before its position i.e $a_i > i$, the distance $a_i - i$ is 
+at most $\vert inv_i \vert$.
+
+\begin{lemma} If $a_i > i$ then $a_i - i \leq \vert inv_i \vert$.
+    \begin{proof} There are $a_i - 1$ elements smaller than $a_i$, but only $i - 1$ available positions to its left. That means that at least $a_i - 1 - (i - 1) = a_i - i $ are on its right, forming that many inversions. So $ \vert inv_i \vert \geq a_i - i$.
+    \end{proof}
+\end{lemma}
+
+\begin{conjecture}
+    The number of swaps performed by blind selection sort is
+    \begin{equation}
+        \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i \vert - \sum_{i} \vert ginv_i \vert
+    \end{equation}
+\end{conjecture}
+\begin{proof}
+    In general, the number of swaps involving $a_i$ (where $a_i$ is the left element) is equal to $ \vert inv_i \vert $.
+For example, let $a = [6, 5, 4, 3, 2, 1]$. The number of swaps involving $3$ is $2$.
+When the algorithm searches for $1$, it will generate one swap for $3$. Another one will be generated
+when $2$ is being searched.
+
+    But notice that a swap with $a_i$ has a net effect
+of shifting $a_i$ to the right. If an element starts before its position ($a_i > i$), then by Lemma 2, the element shifts
+at most $a_i - i$ times before it is frozen.
+
+    Lastly, the subtracting the term $ \sum_{i} \vert ginv_i \vert$ is to account
+    for that fact that elements may be frozen
+    "accidentally", saving one swap for every unfrozen element before it. Note that by Lemma 1,
+    $ \sum_{i} \vert ginv_i \vert = \sum_{i < a_i} \vert ginv_i \vert $.
+\end{proof}
+
+\begin{conjecture}
+    The number of swaps performed by blind selection sort is
+    \begin{equation}
+        \sum_{i} inv_i - 2 \sum_{i} \vert ginv_i \vert
+    \end{equation}
+\end{conjecture}
+\begin{proof}
+    From Conjecture  1 we know the number of swaps is
+    \begin{equation}
+        \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i \vert - \sum_{i} \vert ginv_i \vert
+    \end{equation}
+    If
+    \begin{equation}
+        \sum_{i < a_i} a_i - i = \sum_{i \leq a_i} inv_i - \sum_{i} ginv_i
+    \end{equation}
+    then this statement is proven.
+    \begin{align}
+        & \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i \vert - \sum_{i} \vert ginv_i \vert \\\nonumber
+        &= \sum_{i \leq a_i} inv_i - \sum_{i} \vert ginv_i \vert + \sum_{i > a_i} \vert inv_i \vert - \sum_{i} \vert ginv_i \vert \\\nonumber
+        &= \sum_{i} inv_i - 2 \sum_{i} \vert ginv_i \vert
+    \end{align}
+\end{proof}
+
+\section{Structure of the worst case input}
+\begin{theorem}
+    The worst case permutation of $1, 2, ..., N$ for blind selection sort starts with an increasing, consecutive sequence 
+\end{theorem}
+
+\end{document}
+

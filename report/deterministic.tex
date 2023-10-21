@@ -7,6 +7,7 @@
 \newtheorem{conjecture}{Conjecture}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
 
 \title{Blind selection sort analysis}
 \author{Christopher He}
@@ -17,37 +18,37 @@
 \section{Exact running time}
 
 Let $a$ be a permutation of $1,2, ..., N$.
-Let $inv = \{(i, j) \mid 1 \leq i < j \leq N, a_i > a_j \}$ be the set of inversions of $a$.
-Let $ginv = \{(i, j) \in inv \mid a_j > j\}$ be the set of good inversions.
-Let $inv_k = \{(i, j) \in inv \mid i = k\}$ denote inversions where the left is $k$,
-and similarly define $ginv_k$.
+Let $inv(a) = \{(i, j) \mid 1 \leq i < j \leq N, a_i > a_j \}$ be the set of inversions of $a$.
+Let $ginv(a) = \{(i, j) \in inv(a) \mid a_j > j\}$ be the set of good inversions of a.
+Let $inv_k(a) = \{(i, j) \in inv(a) \mid i = k\}$ denote inversions where the left is $k$,
+and similarly define $ginv_k(a)$.
 
-First we proved that if $(i, j) \in inv$ and $a_j$ starts before its correct position ($j$), then
+First we proved that if $(i, j) \in inv(a)$ and $a_j$ starts before its correct position $j$, then
 so does $a_i$.
 
 \begin{lemma}
-    If $(i, j) \in ginv$ then $a_i > i$.
+    If $(i, j) \in ginv(a)$ then $a_i > i$.
     \begin{proof}
-        If $(i, j) \in ginv$ then $a_i > a_j > j > i$, so $a_i > i$.
+        If $(i, j) \in ginv(a)$ then $a_i > a_j > j > i$, so $a_i > i$.
     \end{proof}
 \end{lemma}
 
 We then proved that if an element starts before its position i.e $a_i > i$, the distance $a_i - i$ is 
-at most $\vert inv_i \vert$.
+at most $\vert inv_i(a) \vert$.
 
-\begin{lemma} If $a_i > i$ then $a_i - i \leq \vert inv_i \vert$.
-    \begin{proof} There are $a_i - 1$ elements smaller than $a_i$, but only $i - 1$ available positions to its left. That means that at least $a_i - 1 - (i - 1) = a_i - i $ are on its right, forming that many inversions. So $ \vert inv_i \vert \geq a_i - i$.
+\begin{lemma} If $a_i > i$ then $a_i - i \leq \vert inv_i(a) \vert$.
+    \begin{proof} There are $a_i - 1$ elements smaller than $a_i$, but only $i - 1$ available positions to its left. That means that at least $a_i - 1 - (i - 1) = a_i - i $ are on its right, forming that many inversions. So $ \vert inv_i(a) \vert \geq a_i - i$.
     \end{proof}
 \end{lemma}
 
 \begin{conjecture}
-    The number of swaps performed by blind selection sort is
+    The number of swaps $s(a)$ performed by blind selection sort on permutation $a$ is
     \begin{equation}
-        \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i \vert - \sum_{i} \vert ginv_i \vert
+        s(a) = \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i(a) \vert - \sum_{i} \vert ginv_i(a) \vert
     \end{equation}
 \end{conjecture}
 \begin{proof}
-    In general, the number of swaps involving $a_i$ (where $a_i$ is the left element) is equal to $ \vert inv_i \vert $.
+    In general, the number of swaps involving $a_i$ (where $a_i$ is the left element) is equal to $ \vert inv_i(a) \vert $.
 For example, let $a = [6, 5, 4, 3, 2, 1]$. The number of swaps involving $3$ is $2$.
 When the algorithm searches for $1$, it will generate one swap for $3$. Another one will be generated
 when $2$ is being searched.
@@ -56,38 +57,58 @@ when $2$ is being searched.
 of shifting $a_i$ to the right. If an element starts before its position ($a_i > i$), then by Lemma 2, the element shifts
 at most $a_i - i$ times before it is frozen.
 
-    Lastly, the subtracting the term $ \sum_{i} \vert ginv_i \vert$ is to account
+    Lastly, we subtract $ \sum_{i} \vert ginv_i(a) \vert$ to account
     for that fact that elements may be frozen
     "accidentally", saving one swap for every unfrozen element before it. Note that by Lemma 1,
-    $ \sum_{i} \vert ginv_i \vert = \sum_{i < a_i} \vert ginv_i \vert $.
+    $ \sum_{i} \vert ginv_i(a) \vert = \sum_{i < a_i} \vert ginv_i(a) \vert $.
 \end{proof}
 
 \begin{conjecture}
-    The number of swaps performed by blind selection sort is
+    The number of swaps $s(a)$ performed by blind selection sort on permutation $a$ is
     \begin{equation}
-        \sum_{i} inv_i - 2 \sum_{i} \vert ginv_i \vert
+        s(a) = \sum_{i} inv_i(a) - 2 \sum_{i} \vert ginv_i(a) \vert
     \end{equation}
 \end{conjecture}
 \begin{proof}
     From Conjecture  1 we know the number of swaps is
     \begin{equation}
-        \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i \vert - \sum_{i} \vert ginv_i \vert
+        s(a) = \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i(a) \vert - \sum_{i} \vert ginv_i(a) \vert
     \end{equation}
-    If
+    If the following equality is proven
     \begin{equation}
-        \sum_{i < a_i} a_i - i = \sum_{i \leq a_i} inv_i - \sum_{i} ginv_i
+        \sum_{i < a_i} a_i - i = \sum_{i \leq a_i} inv_i(a) - \sum_{i} ginv_i(a)
     \end{equation}
     then this statement is proven.
     \begin{align}
-        & \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i \vert - \sum_{i} \vert ginv_i \vert \\\nonumber
-        &= \sum_{i \leq a_i} inv_i - \sum_{i} \vert ginv_i \vert + \sum_{i > a_i} \vert inv_i \vert - \sum_{i} \vert ginv_i \vert \\\nonumber
-        &= \sum_{i} inv_i - 2 \sum_{i} \vert ginv_i \vert
+        &s(a) = \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i(a) \vert - \sum_{i} \vert ginv_i(a) \vert \\\nonumber
+        &= \sum_{i \leq a_i} inv_i(a) - \sum_{i} \vert ginv_i(a) \vert + \sum_{i > a_i} \vert inv_i(a) \vert - \sum_{i} \vert ginv_i(a) \vert \\\nonumber
+        &= \sum_{i} inv_i(a) - 2 \sum_{i} \vert ginv_i(a) \vert
     \end{align}
 \end{proof}
 
 \section{Structure of the worst case input}
 \begin{theorem}
-    The worst case permutation of $1, 2, ..., N$ for blind selection sort starts with an increasing, consecutive sequence 
+    If $a$ is the worst case permutation of $1, 2, ..., N$ for blind selection sort, then $ginv_i(a) = \emptyset$.
+    \begin{proof}
+        Assume $ginv_i(a) \neq \emptyset$, then pick $(i, j) \in ginv_i(a)$ such that $\forall k, i < k < j, a_k < k$.
+        So we start with $a = [a_1, ... , a_i, ...,  a_j, ..., a_N]$. We can construct a new permutation by swapping $a_i$ and $a_j$
+        i.e $a' = [a_1, ... , a_j, ...,  a_i, ..., a_N]$. This effectively removes the good inversion $(i, j)$.
+        Furthermore, let $k, i < k < j$. The number of inversions involving $k$ remains the same after the swap. TODO: finish
+        By Conjecture 2, $s(a') = s(a) + 1$, thus contradicting that $a$ is the worst case.
+    \end{proof}
+\end{theorem}
+This gives us the immediate result that in the worst input $a$, if an element starts before its position, all elements before it are smaller (otherwise $ginv(a) \neq \emptyset$).
+\begin{corollary}
+    In the worst case permutation of $1, 2, ... , N$ for blind selection sort, if $a_j > j$ then $\forall i < j, a_i < a_j$.
+\end{corollary}
+\begin{theorem}
+    The worst case permutation of $1, 2, ..., N$ for blind selection sort starts with an increasing, consecutive sequence up to $N - 1$.
+    \begin{lemma}
+        If $a$ is the worst input for blind selection sort and $a_j > j$, then $ \forall i < j, a_i > i$.
+    \end{lemma}
+    \begin{lemma}
+        If $a$ is the worst input for blind selection sort and $\exists j > 1$ such that $a_j > j$, then $ a_{j-1} = j - 1$.
+    \end{lemma}
 \end{theorem}
 
 \end{document}

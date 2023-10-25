@@ -19,10 +19,24 @@
 \section{Exact running time}
 
 Let $a$ be a permutation of $1,2, ..., N$.
-Let $inv(a) = \{(i, j) \mid 1 \leq i < j \leq N, a_i > a_j \}$ be the set of inversions of $a$.
-Let $ginv(a) = \{(i, j) \in inv(a) \mid a_j > j\}$ be the set of good inversions of a.
-Let $inv_k(a) = \{(i, j) \in inv(a) \mid i = k\}$ denote inversions where the left is $k$,
-and similarly define $ginv_k(a)$.
+\begin{definition}
+    Let $inv(a) = \{(i, j) \mid 1 \leq i < j \leq N, a_i > a_j \}$ be the set of inversions of $a$.
+\end{definition}
+
+\begin{definition}
+    If $a_j > j$, we say $a_j$ starts \textbf{before} its position.
+    If $a_j > j$, we say $a_j$ starts \textbf{after} its position.
+\end{definition}
+
+\begin{definition}
+    Let $ginv(a) = \{(i, j) \in inv(a) \mid \text{$a_j$ starts \textbf{before} its position} \}$
+    be the set of good inversions of a.
+\end{definition}
+
+\begin{definition}
+    Let $inv_k(a) = \{(i, j) \in inv(a) \mid i = k\}$ denote inversions where the left is $k$,
+    and similarly define $ginv_k(a)$.
+\end{definition}
 
 First we proved that if $(i, j) \in inv(a)$ and $a_j$ starts before its correct position $j$, then
 so does $a_i$.
@@ -50,13 +64,13 @@ at most $\vert inv_i(a) \vert$.
 \end{conjecture}
 \begin{proof}
     In general, the number of swaps involving $a_i$ (where $a_i$ is the left element) is equal to $ \vert inv_i(a) \vert $.
-For example, let $a = [6, 5, 4, 3, 2, 1]$. The number of swaps involving $3$ is $2$.
-When the algorithm searches for $1$, it will generate one swap for $3$. Another one will be generated
-when $2$ is being searched.
+    For example, let $a = [6, 5, 4, 3, 2, 1]$. The number of swaps involving $3$ is $2$.
+    When the algorithm searches for $1$, it will generate one swap for $3$. Another one will be generated
+    when $2$ is being searched.
 
     But notice that a swap with $a_i$ has a net effect
-of shifting $a_i$ to the right. If an element starts before its position ($a_i > i$), then by Lemma 2, the element shifts
-at most $a_i - i$ times before it is frozen.
+    of shifting $a_i$ to the right. If an element starts before its position ($a_i > i$), then by Lemma 2, the element shifts
+    at most $a_i - i$ times before it is frozen.
 
     Lastly, we subtract $ \sum_{i} \vert ginv_i(a) \vert$ to account
     for that fact that elements may be frozen

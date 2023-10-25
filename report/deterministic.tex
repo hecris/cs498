@@ -105,10 +105,12 @@ at most $\vert inv_i(a) \vert$.
 \begin{theorem}
     If $a$ is the worst case permutation of $1, 2, ..., N$ for blind selection sort, then $ginv_i(a) = \emptyset$.
     \begin{proof}
-        Assume $ginv_i(a) \neq \emptyset$, then pick $(i, j) \in ginv_i(a)$ such that $\forall k, i < k < j, a_k < k$.
+        Assume $ginv_i(a) \neq \emptyset$, then pick $(i, j) \in ginv_i(a)$ such that $\forall k, i < k < j, a_k$
+        starts after its position (otherwise choose $(i, k) \in ginv_i(a)$ instead).
         So we start with $a = [a_1, ... , a_i, ...,  a_j, ..., a_N]$. We can construct a new permutation by swapping $a_i$ and $a_j$
         i.e $a' = [a_1, ... , a_j, ...,  a_i, ..., a_N]$. This effectively removes the good inversion $(i, j)$.
-        Furthermore, let $k, i < k < j$. The number of inversions involving $k$ remains the same after the swap. TODO: finish.
+        % Furthermore, let $k, i < k < j$. The number of inversions involving $k$ remains the same after the swap. TODO: finish.
+        (TODO: show that elements in between are unaffected)
         By Conjecture 2, $s(a') = s(a) + 1$, thus contradicting that $a$ is the worst case.
     \end{proof}
 \end{theorem}

@@ -74,7 +74,7 @@ at most $a_i - i$ times before it is frozen.
     \begin{equation}
         s(a) = \sum_{i < a_i} a_i - i + \sum_{i > a_i} \vert inv_i(a) \vert - \sum_{i} \vert ginv_i(a) \vert
     \end{equation}
-    If the following equality is proven
+    If the following equality is proven (TODO: prove this by proving that good inversions balance the distance)
     \begin{equation}
         \sum_{i < a_i} a_i - i = \sum_{i \leq a_i} inv_i(a) - \sum_{i} ginv_i(a)
     \end{equation}
@@ -102,13 +102,27 @@ This gives us the immediate result that in the worst input $a$, if an element st
     In the worst case permutation of $1, 2, ... , N$ for blind selection sort, if $a_j > j$ then $\forall i < j, a_i < a_j$.
 \end{corollary}
 \begin{theorem}
-    The worst case permutation of $1, 2, ..., N$ for blind selection sort starts with an increasing, consecutive sequence up to $N - 1$.
+    The worst case permutation of $1, 2, ..., N$ for blind selection sort starts with an increasing, consecutive sequence up to $N$.
     \begin{lemma}
         If $a$ is the worst input for blind selection sort and $a_j > j$, then $ \forall i < j, a_i > i$.
+        \begin{proof}
+            We will prove the equivalent statement: if $j > 1, a_j > j$, then $a_{j - 1} > j - 1$.
+            Assume for the sake of contradition
+            that $a_{j - 1} < j - 1$. By Corollary 1, we know $a_{j - 1} < a_j$. So switch the position of
+            $a_{j - 1}$, and $a_j$. We created an inversion, and we know this is not a good inversion since
+            $a_{j - 1} < j - 1 < j $  (in other words, after moving $a_{j - 1}$ to the right, it is still after
+            its correct position. So by Conjecture 2, we made an even worse input.
+        \end{proof}
     \end{lemma}
     \begin{lemma}
         If $a$ is the worst input for blind selection sort and $\exists j > 1$ such that $a_j > j$, then $ a_{j-1} = j - 1$.
+        \begin{proof}
+            Assume for the sake of contradiction that $a_{j - 1} \neq j - 1$.
+        \end{proof}
     \end{lemma}
+    \begin{proof}
+        Since $a_{N} < N$ (otherwise it is frozen), then by Lemma 2 and 3, the statement is proven.
+    \end{proof}
 \end{theorem}
 
 \end{document}

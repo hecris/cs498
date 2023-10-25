@@ -119,15 +119,18 @@ This gives us the immediate result that in the worst input $a$, if an element st
         If $a_k = x$ then  $idx(x) = k$.
     \end{definition}
     \begin{lemma}
-        If $a$ is the worst input for blind selection sort and $\exists j > 1$ such that $a_j > j$, then $ a_{j-1} = j - 1$.
+        If $a$ is the worst input for blind selection sort and $\exists j > 1$ such that $a_j > j$, then $ a_{j-1} = a_j - 1$.
         \begin{proof}
-            Assume for the sake of contradiction that $a_{j - 1} \neq j - 1$ and
-            let $k = idx(j - 1)$. We know that $k > j - 1$, otherwise $(k, j - 1) \in ginv(a)$. Switch
-            $a_{j - 1}$ with $a_k$.
+            By Corollary 1, $a_{j - 1} < a_j$. Assume for the sake of contradiction that $a_{j - 1} \neq a_j - 1$,
+            so $a_{j - 1} < a_j - 1$. 
+            Let $k = idx(a_j - 1)$, we know that $k > j - 1$, otherwise $(k, j - 1) \in ginv(a)$. Switch
+            $a_{j - 1}$ with $a_k$. By doing this we create an inversion $(j - 1, k)$, and we know this is not
+            a good inversion since $a_{j - 1} < a_k < k$. TODO: show that elements between $j$ and $k$ 
+            were unaffected. Thus by Conjecture 2, we made an even worse input.
         \end{proof}
     \end{lemma}
     \begin{proof}
-        Since $a_{N} < N$ (otherwise it is frozen), then by Lemma 2 and 3, the statement is proven.
+        Since $idx(N) < N$ (otherwise it is frozen), then by Lemma 2 and 3, the statement is proven.
     \end{proof}
 \end{theorem}
 

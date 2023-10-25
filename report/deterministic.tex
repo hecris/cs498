@@ -8,6 +8,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
 \newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
 
 \title{Blind selection sort analysis}
 \author{Christopher He}
@@ -93,7 +94,7 @@ at most $a_i - i$ times before it is frozen.
         Assume $ginv_i(a) \neq \emptyset$, then pick $(i, j) \in ginv_i(a)$ such that $\forall k, i < k < j, a_k < k$.
         So we start with $a = [a_1, ... , a_i, ...,  a_j, ..., a_N]$. We can construct a new permutation by swapping $a_i$ and $a_j$
         i.e $a' = [a_1, ... , a_j, ...,  a_i, ..., a_N]$. This effectively removes the good inversion $(i, j)$.
-        Furthermore, let $k, i < k < j$. The number of inversions involving $k$ remains the same after the swap. TODO: finish
+        Furthermore, let $k, i < k < j$. The number of inversions involving $k$ remains the same after the swap. TODO: finish.
         By Conjecture 2, $s(a') = s(a) + 1$, thus contradicting that $a$ is the worst case.
     \end{proof}
 \end{theorem}
@@ -111,13 +112,18 @@ This gives us the immediate result that in the worst input $a$, if an element st
             that $a_{j - 1} < j - 1$. By Corollary 1, we know $a_{j - 1} < a_j$. So switch the position of
             $a_{j - 1}$, and $a_j$. We created an inversion, and we know this is not a good inversion since
             $a_{j - 1} < j - 1 < j $  (in other words, after moving $a_{j - 1}$ to the right, it is still after
-            its correct position. So by Conjecture 2, we made an even worse input.
+            its correct position.) So by Conjecture 2, we made an even worse input.
         \end{proof}
     \end{lemma}
+    \begin{definition}
+        If $a_k = x$ then  $idx(x) = k$.
+    \end{definition}
     \begin{lemma}
         If $a$ is the worst input for blind selection sort and $\exists j > 1$ such that $a_j > j$, then $ a_{j-1} = j - 1$.
         \begin{proof}
-            Assume for the sake of contradiction that $a_{j - 1} \neq j - 1$.
+            Assume for the sake of contradiction that $a_{j - 1} \neq j - 1$ and
+            let $k = idx(j - 1)$. We know that $k > j - 1$, otherwise $(k, j - 1) \in ginv(a)$. Switch
+            $a_{j - 1}$ with $a_k$.
         \end{proof}
     \end{lemma}
     \begin{proof}

@@ -101,8 +101,23 @@ print('deter1: ', res, sum(res))
 res = (deter1p(list(arr)))
 print('deter1p: ', res, sum(res))
 res = (deter2(transform(arr)))
-print('deter2: ', res, sum(res))
+print('deter2 transformed: ', res, sum(res))
 res = (deter2p(transform(arr)))
+print('deter2p transformed: ', res, sum(res))
+res = (deter2(list(arr)))
+print('deter2: ', res, sum(res))
+res = (deter2p(list(arr)))
 print('deter2p: ', res, sum(res))
-print(sum(abs(arr[i] - i) for i in range(len(arr))))
+
+print('dist: ', sum(abs(arr[i] - i) for i in range(len(arr))))
+
+def predict_1p(arr):
+    a = sum(i - arr[i] for i in range(len(arr)) if i > arr[i])
+    b = sum(arr[i] < i and arr[i] > arr[j] for i in range(len(arr)) for j in range(i + 1, len(arr)))
+    c = sum(arr[i] > arr[j] and arr[j] > j for i in range(len(arr)) for j in range(i + 1, len(arr)))
+    print(-2 * b + 2 * c)
+    return a - b + c
+
+print('predict_1p: ', predict_1p(arr))
+
 

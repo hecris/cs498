@@ -40,7 +40,7 @@ def bubble_down(arr, i, element_to_index_map=Dictionary(), swap_counter=collecti
         while arr[j] == j:
             j -= 1
         # Swap elements
-        swap_counter[arr[i]] += 1
+        swap_counter[arr[j]] += 1
         arr[i], arr[j] = arr[j], arr[i]
         element_to_index_map.update(arr[i], i)
         element_to_index_map.update(arr[j], j)

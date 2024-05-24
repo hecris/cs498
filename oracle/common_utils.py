@@ -18,16 +18,16 @@ def random_derangement(n):
     return arr
 
 
-def derangements(N):
+def derangements(n):
     """Generates all derangements length N."""
     ans = []
-    A = list(range(N))
+    A = list(range(n))
 
     def go(i):
-        if i == N:
+        if i == n:
             yield A.copy()
         else:
-            for j in range(i, N):
+            for j in range(i, n):
                 if A[j] != i:
                     A[i], A[j] = A[j], A[i]
                     yield from go(i+1)
@@ -35,3 +35,36 @@ def derangements(N):
                     pass
 
     yield from go(0)
+
+
+def count_inversions(arr, cond=lambda i, x, j, y: True):
+    count = 0
+    for i in range(len(arr)):
+        for j in range(i + 1, len(arr)):
+            if arr[i] > arr[j] and cond(i, arr[i], j, arr[j]):
+                count += 1
+    return count
+
+
+def count_good_inversions(arr):
+    def cond(i, x, j, y): return y > j
+    return count_inversions(arr, cond)
+
+
+def get_abs_distance(arr, cond=lambda i, x: True):
+    ans = 0
+    for i, x in enumerate(arr):
+        if cond(i, x):
+            ans += abs(i - x)
+    return ans
+
+
+if __name__ == '__main__':
+    arr = [6, 7, 8, 9, 3, 4, 5, 2, 1, 0]
+    print(count_inversions(arr))
+    print(count_good_inversions(arr))
+    print(get_abs_distance(arr))
+    num_swaps_eq1 = count_inversions(arr) - 2 * count_good_inversions(arr)
+    num_swaps_eq2 = get_abs_distance(arr, lambda i, x: x > i) + count_inversions(
+        arr, lambda i, x, j, y: x < i) - count_good_inversions(arr)
+    assert num_swaps_eq1 == num_swaps_eq2

@@ -1,3 +1,6 @@
+import collections
+
+
 class Dictionary(dict):
     def update(self, k, v):
         """Update the value of a key if it exists in the dictionary."""
@@ -27,7 +30,7 @@ def bubble_up(arr, i, element_to_index_map=Dictionary()):
     return swaps
 
 
-def bubble_down(arr, i, element_to_index_map=Dictionary()):
+def bubble_down(arr, i, element_to_index_map=Dictionary(), swap_counter=collections.defaultdict(int)):
     """Assumes i is not the first element, since we can't bubble up the first element."""
     assert i > 0
     j = i - 1
@@ -37,6 +40,7 @@ def bubble_down(arr, i, element_to_index_map=Dictionary()):
         while arr[j] == j:
             j -= 1
         # Swap elements
+        swap_counter[arr[i]] += 1
         arr[i], arr[j] = arr[j], arr[i]
         element_to_index_map.update(arr[i], i)
         element_to_index_map.update(arr[j], j)

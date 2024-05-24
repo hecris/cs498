@@ -1,4 +1,5 @@
 import oracle_utils
+import random
 
 
 def blind_selection_sort(arr):
@@ -33,13 +34,30 @@ def blind_selection_sort_reversed(arr):
     return swaps
 
 
-def blind_selection_sort_oracle(arr):
+def blind_selection_sort_oracle(arr, print_delta=False):
     element_to_index_map = oracle_utils.get_after_elements(arr)
     swaps = 0
     while element_to_index_map:
         smallest_element = min(element_to_index_map)
         idx = element_to_index_map[smallest_element]
-        swaps += oracle_utils.bubble_down(arr, idx, element_to_index_map)
+        delta = oracle_utils.bubble_down(arr, idx, element_to_index_map)
+        swaps += delta
+        if print_delta:
+            print(delta)
+        element_to_index_map.pop(smallest_element)
+    assert arr == sorted(arr)
+    return swaps
+
+def blind_selection_sort_furthest_oracle(arr, print_delta=False):
+    element_to_index_map = oracle_utils.get_after_elements(arr)
+    swaps = 0
+    while element_to_index_map:
+        smallest_element = max(element_to_index_map, key=element_to_index_map.get)
+        idx = element_to_index_map[smallest_element]
+        delta = oracle_utils.bubble_down(arr, idx, element_to_index_map)
+        swaps += delta
+        if print_delta:
+            print(delta)
         element_to_index_map.pop(smallest_element)
     assert arr == sorted(arr)
     return swaps
@@ -49,9 +67,21 @@ def blind_selection_sort_reversed_oracle(arr):
     element_to_index_map = oracle_utils.get_before_elements(arr)
     swaps = 0
     while element_to_index_map:
-        smallest_element = max(element_to_index_map)
-        idx = element_to_index_map[smallest_element]
+        largest_element = max(element_to_index_map)
+        idx = element_to_index_map[largest_element]
         swaps += oracle_utils.bubble_up(arr, idx, element_to_index_map)
-        element_to_index_map.pop(smallest_element)
+        element_to_index_map.pop(largest_element)
+    assert arr == sorted(arr)
+    return swaps
+
+
+def blind_selection_sort_random_oracle(arr):
+    element_to_index_map = oracle_utils.get_after_elements(arr)
+    swaps = 0
+    while element_to_index_map:
+        random_element = random.choice(list(element_to_index_map.keys()))
+        idx = element_to_index_map[random_element]
+        swaps += oracle_utils.bubble_down(arr, idx, element_to_index_map)
+        element_to_index_map.pop(random_element)
     assert arr == sorted(arr)
     return swaps

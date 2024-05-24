@@ -1,5 +1,8 @@
 import random
 
+BEFORE = lambda i, x, *args: x > i
+AFTER = lambda i, x, *args: x < i
+
 
 def random_permutation(n):
     arr = list(range(n))
@@ -64,13 +67,11 @@ def num_swaps_eq1(arr):
 
 
 def num_swaps_eq2(arr):
-    return get_abs_dist(arr, lambda i, x: x > i) + count_inversions(
-        arr, lambda i, x, j, y: x < i) - count_good_inversions(arr)
+    return get_abs_dist(arr, BEFORE) + count_inversions(arr, AFTER) - count_good_inversions(arr)
 
 
 def num_swaps_eq3(arr):
-    return count_inversions(arr, lambda i, x, y, j: x < i) + get_abs_dist(
-        arr, lambda i, x: x > i) - count_good_inversions(arr)
+    return count_inversions(arr, AFTER) + get_abs_dist(arr, BEFORE) - count_good_inversions(arr)
 
 
 if __name__ == '__main__':

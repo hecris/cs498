@@ -59,14 +59,23 @@ def get_abs_dist(arr, cond=lambda i, x: True):
     return ans
 
 
+def num_swaps_eq1(arr):
+    return count_inversions(arr) - 2 * count_good_inversions(arr)
+
+
+def num_swaps_eq2(arr):
+    return get_abs_dist(arr, lambda i, x: x > i) + count_inversions(
+        arr, lambda i, x, j, y: x < i) - count_good_inversions(arr)
+
+
+def num_swaps_eq3(arr):
+    return count_inversions(arr, lambda i, x, y, j: x < i) + get_abs_dist(
+        arr, lambda i, x: x > i) - count_good_inversions(arr)
+
+
 if __name__ == '__main__':
     arr = [6, 7, 8, 9, 3, 4, 5, 2, 1, 0]
     print(count_inversions(arr))
     print(count_good_inversions(arr))
     print(get_abs_dist(arr))
-    num_swaps_eq1 = count_inversions(arr) - 2 * count_good_inversions(arr)
-    num_swaps_eq2 = get_abs_dist(arr, lambda i, x: x > i) + count_inversions(
-        arr, lambda i, x, j, y: x < i) - count_good_inversions(arr)
-    num_swaps_eq3 = count_inversions(arr, lambda i, x, y, j: x < i) + get_abs_dist(
-        arr, lambda i, x: x > i) - count_good_inversions(arr)
-    assert num_swaps_eq1 == num_swaps_eq2 == num_swaps_eq3
+    assert num_swaps_eq1(arr) == num_swaps_eq2(arr) == num_swaps_eq3(arr)

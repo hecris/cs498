@@ -55,14 +55,17 @@ def bubble_down(arr, i, element_to_index_map=Dictionary(), swap_counter=collecti
 
 
 def get_before_elements(arr):
+    """Returns a map of elements that are before their position to their index."""
     return Dictionary({x: i for i, x in enumerate(arr) if x > i})
 
 
 def get_after_elements(arr):
+    """Returns a map of elements that are after their position to their index."""
     return Dictionary({x: i for i, x in enumerate(arr) if x < i})
 
 
 def sort_given_order(arr, order, swap_counter=collections.defaultdict(int)):
+    """Bubbles down elements after their position in the specified order."""
     swaps = 0
     element_to_index_map = get_after_elements(arr)
     for x in order:
@@ -75,12 +78,14 @@ def sort_given_order(arr, order, swap_counter=collections.defaultdict(int)):
 
 
 def get_best_order(arr):
+    """Gets the order of bubbling down that results in the most swaps."""
     element_to_index_map = get_after_elements(arr)
     elements = list(element_to_index_map.keys())
     return min(sort_given_order(list(arr), order) for order in itertools.permutations(elements))
 
 
 def get_worst_order(arr):
+    """Gets the order of bubbling down that results in the least swaps."""
     element_to_index_map = get_after_elements(arr)
     elements = list(element_to_index_map.keys())
     return max(sort_given_order(list(arr), order) for order in itertools.permutations(elements))

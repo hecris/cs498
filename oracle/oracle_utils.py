@@ -1,4 +1,5 @@
 import collections
+import itertools
 
 
 class Dictionary(dict):
@@ -59,6 +60,30 @@ def get_before_elements(arr):
 
 def get_after_elements(arr):
     return Dictionary({x: i for i, x in enumerate(arr) if x < i})
+
+
+def sort_given_order(arr, order, swap_counter=collections.defaultdict(int)):
+    swaps = 0
+    element_to_index_map = get_after_elements(arr)
+    for x in order:
+        idx = element_to_index_map[x]
+        swaps += bubble_down(arr,
+                             idx, element_to_index_map, swap_counter)
+        element_to_index_map.pop(x)
+    assert arr == sorted(arr)
+    return swaps
+
+
+def get_best_order(arr):
+    element_to_index_map = get_after_elements(arr)
+    elements = list(element_to_index_map.keys())
+    return min(sort_given_order(list(arr), order) for order in itertools.permutations(elements))
+
+
+def get_worst_order(arr):
+    element_to_index_map = get_after_elements(arr)
+    elements = list(element_to_index_map.keys())
+    return max(sort_given_order(list(arr), order) for order in itertools.permutations(elements))
 
 
 if __name__ == '__main__':
